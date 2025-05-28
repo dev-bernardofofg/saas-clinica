@@ -4,9 +4,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Lock, Mail } from "lucide-react";
 import { useForm } from "react-hook-form";
 
+import { BaseInput } from "@/components/(bases)/(inputs)/base-input";
 import { BaseButton } from "@/components/(bases)/base-button";
 import { BaseForm } from "@/components/(bases)/base-form";
-import { BaseInput } from "@/components/(bases)/base-input";
 import { Form } from "@/components/ui/form";
 import { getErrorMessage } from "@/helpers/errors";
 import { authClient } from "@/lib/auth-client";

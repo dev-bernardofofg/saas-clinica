@@ -4,13 +4,16 @@ import { redirect } from "next/navigation";
 import React from "react";
 
 const LayoutPrivate = async ({ children }: { children: React.ReactNode }) => {
+  const headersList = await headers();
+
   const session = await auth.api.getSession({
-    headers: await headers(),
+    headers: headersList,
   });
 
   if (!session?.user) {
     redirect("/");
   }
+
   return <div>{children}</div>;
 };
 
