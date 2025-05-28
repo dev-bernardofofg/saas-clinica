@@ -8,6 +8,7 @@ import { BaseButton } from "@/components/(bases)/base-button";
 import { BaseForm } from "@/components/(bases)/base-form";
 import { BaseInput } from "@/components/(bases)/base-input";
 import { Form } from "@/components/ui/form";
+import { getErrorMessage } from "@/helpers/errors";
 import { authClient } from "@/lib/auth-client";
 import {
   signUpDefaultValues,
@@ -15,6 +16,7 @@ import {
   signUpValues,
 } from "@/schemas/auth.schema";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 export const SignUpForm = () => {
   const { push } = useRouter();
@@ -33,6 +35,9 @@ export const SignUpForm = () => {
       {
         onSuccess: () => {
           push("/dashboard");
+        },
+        onError: (error) => {
+          toast.error(getErrorMessage(error.error.code));
         },
       },
     );
