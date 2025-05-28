@@ -4,24 +4,38 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Lock, Mail, User } from "lucide-react";
 import { useForm } from "react-hook-form";
 
+import { BaseButton } from "@/components/(bases)/base-button";
 import { BaseForm } from "@/components/(bases)/base-form";
 import { BaseInput } from "@/components/(bases)/base-input";
-import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
+import { authClient } from "@/lib/auth-client";
 import {
   signUpDefaultValues,
   signUpSchema,
   signUpValues,
 } from "@/schemas/auth.schema";
+import { useRouter } from "next/navigation";
 
 export const SignUpForm = () => {
+  const { push } = useRouter();
   const form = useForm({
     resolver: zodResolver(signUpSchema),
     defaultValues: signUpDefaultValues,
   });
 
-  const handleSignIn = (data: signUpValues) => {
-    console.log(data);
+  const handleSignIn = async (data: signUpValues) => {
+    await authClient.signUp.email(
+      {
+        email: data.email,
+        name: data.name,
+        password: data.password,
+      },
+      {
+        onSuccess: () => {
+          push("/dashboard");
+        },
+      },
+    );
   };
 
   return (
@@ -50,9 +64,9 @@ export const SignUpForm = () => {
           type="password"
           Icon={Lock}
         />
-        <Button type="submit" className="w-full">
-          Entrar
-        </Button>
+        <BaseButton type="submit" isLoading={form.formState.isSubmitting}>
+          Criar conta
+        </BaseButton>
       </BaseForm>
     </Form>
   );

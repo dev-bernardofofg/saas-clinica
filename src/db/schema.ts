@@ -32,13 +32,12 @@ export const appointmentStatusEnum = pgEnum("appointment_status", [
 
 // Users
 export const usersTable = pgTable("users", {
-  id: text("id").primaryKey().notNull(),
-  email: varchar("email", { length: 255 }).notNull().unique(),
+  id: text("id").primaryKey(),
+  name: text("name").notNull(),
+  email: text("email").notNull().unique(),
   emailVerified: boolean("email_verified").notNull(),
-  password: text("password").notNull(),
-  name: varchar("name", { length: 255 }).notNull(),
   phoneNumber: varchar("phone_number", { length: 20 }),
-  image: text("avatar_url"),
+  image: text("image"),
   isActive: boolean("is_active").notNull().default(true),
   lastLoginAt: timestamp("last_login_at"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
