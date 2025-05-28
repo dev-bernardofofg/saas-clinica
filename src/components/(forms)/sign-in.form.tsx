@@ -15,6 +15,7 @@ import {
   signInSchema,
   signInValues,
 } from "@/schemas/auth.schema";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
@@ -42,6 +43,13 @@ export const SignInForm = () => {
     );
   };
 
+  const handleGoogleLogin = async () => {
+    await authClient.signIn.social({
+      provider: "google",
+      callbackURL: "/dashboard",
+    });
+  };
+
   return (
     <Form {...form}>
       <BaseForm
@@ -64,6 +72,11 @@ export const SignInForm = () => {
         />
         <BaseButton type="submit" isLoading={form.formState.isSubmitting}>
           Entrar
+        </BaseButton>
+
+        <BaseButton type="button" onClick={handleGoogleLogin} variant="outline">
+          <Image src="/google-icon.svg" alt="Google" width={24} height={24} />
+          Entrar com Google
         </BaseButton>
       </BaseForm>
     </Form>

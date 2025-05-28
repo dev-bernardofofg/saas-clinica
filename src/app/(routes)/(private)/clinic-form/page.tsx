@@ -21,7 +21,7 @@ const ClinicFormPage = async () => {
     where: eq(usersToClinicsTable.userId, session?.user?.id!),
   });
 
-  if (clinics) {
+  if (clinics.length > 0) {
     redirect("/dashboard");
   }
   return (
