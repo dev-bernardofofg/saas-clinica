@@ -8,6 +8,7 @@ import { BaseButton } from "@/components/(bases)/base-button";
 import { BaseForm } from "@/components/(bases)/base-form";
 import { BaseInput } from "@/components/(bases)/base-input";
 import { Form } from "@/components/ui/form";
+import { getErrorMessage } from "@/helpers/errors";
 import { authClient } from "@/lib/auth-client";
 import {
   signInDefaultValues,
@@ -34,8 +35,8 @@ export const SignInForm = () => {
         onSuccess: () => {
           push("/dashboard");
         },
-        onError: () => {
-          toast.error("E-mail ou senha inválidos");
+        onError: (error) => {
+          toast.error(getErrorMessage(error.error.code));
         },
       },
     );

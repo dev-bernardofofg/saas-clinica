@@ -8,6 +8,7 @@ const errorCodes = {
   INVALID_EMAIL: "E-mail inválido",
   INVALID_NAME: "Nome inválido",
   INVALID_PHONE: "Telefone inválido",
+  INVALID_EMAIL_OR_PASSWORD: "E-mail ou senha inválidos",
 } satisfies ErrorResponseTypes;
 
 export const getErrorMessage = (code: string) => {
