@@ -1,3 +1,5 @@
+import { AppSidebar } from "@/components/(layouts)/(sidebar)/sidebar";
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
@@ -14,7 +16,15 @@ const LayoutPrivate = async ({ children }: { children: React.ReactNode }) => {
     redirect("/");
   }
 
-  return <div>{children}</div>;
+  return (
+    <SidebarProvider>
+      <AppSidebar />
+      <main>
+        <SidebarTrigger />
+        {children}
+      </main>
+    </SidebarProvider>
+  );
 };
 
 export default LayoutPrivate;

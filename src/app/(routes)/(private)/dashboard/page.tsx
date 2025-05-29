@@ -1,4 +1,3 @@
-import { BaseButton } from "@/components/(bases)/base-button";
 import { db } from "@/db";
 import { usersToClinicsTable } from "@/db/schema";
 import { auth } from "@/lib/auth";
@@ -23,7 +22,6 @@ const DashboardPage = async () => {
     <div>
       DashboardPage
       <p>{session?.user?.email}</p>
-      <BaseButton clickAction="sign-out">Sair</BaseButton>
     </div>
   );
 };
