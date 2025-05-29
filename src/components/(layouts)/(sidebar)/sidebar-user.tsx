@@ -27,12 +27,12 @@ export const SidebarUser = async () => {
             <SidebarMenuButton>
               <Avatar>
                 <AvatarImage src="https://github.com/dev-bernardofofg.png" />
-                <AvatarFallback>CN</AvatarFallback>
+                <AvatarFallback>{session?.user.name}</AvatarFallback>
               </Avatar>{" "}
               <div className="flex flex-col">
-                <span>{session?.user.name}</span>
+                <span> {session?.clinics.name}</span>
                 <span className="text-muted-foreground text-xs">
-                  {session?.user.email}
+                  {session?.user.name}
                 </span>
               </div>
               <EllipsisVertical className="ml-auto" />

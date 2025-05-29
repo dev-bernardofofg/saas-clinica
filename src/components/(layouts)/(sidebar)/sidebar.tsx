@@ -11,6 +11,7 @@ import {
   SidebarContent,
   SidebarFooter,
   SidebarHeader,
+  SidebarSeparator,
 } from "@/components/ui/sidebar";
 import Image from "next/image";
 import Link from "next/link";
@@ -65,6 +66,7 @@ export const AppSidebar = () => {
         <SidebarSection title="Menu principal" items={menuPrincipal} />
         <SidebarSection title="Outros" items={others} />
       </SidebarContent>
+      <SidebarSeparator />
       <SidebarFooter>
         <SidebarUser />
       </SidebarFooter>
