@@ -1,6 +1,6 @@
 "use client";
 
-import { Loader2 } from "lucide-react";
+import { Loader2, Plus } from "lucide-react";
 import { ComponentProps } from "react";
 
 import { Button } from "@/components/ui/button";
@@ -11,7 +11,7 @@ import { useRouter } from "next/navigation";
 interface BaseButtonProps extends ComponentProps<typeof Button> {
   isLoading?: boolean;
   loadingText?: string;
-  clickAction?: "default" | "sign-out";
+  clickAction?: "default" | "sign-out" | "create";
 }
 
 export const BaseButton = ({
@@ -26,7 +26,7 @@ export const BaseButton = ({
   const { push } = useRouter();
   return (
     <Button
-      className={cn("w-full", className)}
+      className={cn("w-full space-x-3", className)}
       disabled={disabled || isLoading}
       onClick={async () => {
         if (clickAction === "sign-out") {
@@ -47,7 +47,10 @@ export const BaseButton = ({
           {loadingText || children}
         </>
       ) : (
-        children
+        <>
+          {clickAction === "create" && <Plus className="mr-2 h-4 w-4" />}
+          {children}
+        </>
       )}
     </Button>
   );

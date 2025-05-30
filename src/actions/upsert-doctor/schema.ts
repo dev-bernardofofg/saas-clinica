@@ -1,0 +1,40 @@
+import { z } from "zod";
+
+export const upsertDoctorSchema = z
+  .object({
+    id: z.string().uuid().optional(),
+    name: z.string().trim().min(1, { message: "" }),
+    email: z.string().email({ message: "*" }).optional(),
+    phoneNumber: z.string().min(1, { message: "*" }),
+    avatarImageUrl: z.string().optional(),
+    speciality: z.string().trim().min(1, { message: "*" }),
+    professionalId: z
+      .string()
+      .trim()
+      .min(1, { message: "*" })
+      .toUpperCase()
+      .regex(
+        /^\d{4,6}[-\/\s]?(AC|AL|AP|AM|BA|CE|DF|ES|GO|MA|MT|MS|MG|PA|PB|PR|PE|PI|RJ|RN|RS|RO|RR|SC|SP|SE|TO)$/,
+        {
+          message: "CRM inválido. Ex: 123456-SP",
+        },
+      ),
+    appointmentPriceInCents: z.number().min(1, {
+      message: "*",
+    }),
+    avaliableFromWeekDay: z.coerce.number().min(0).max(6),
+    availableToWeekDay: z.coerce.number().min(0).max(6),
+    avaliableFromTime: z.string().min(1, {
+      message: "*",
+    }),
+    availableToTime: z.string().min(1, {
+      message: "*",
+    }),
+    isActive: z.boolean().default(true),
+  })
+  .refine((data) => data.avaliableFromTime <= data.availableToTime, {
+    message: "O horário de início deve ser menor que o horário de término",
+    path: ["availableToTime"],
+  });
+
+export type UpsertDoctorSchema = z.infer<typeof upsertDoctorSchema>;

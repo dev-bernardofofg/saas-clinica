@@ -62,6 +62,8 @@ export const AppSidebar = () => {
           />
         </Link>
       </SidebarHeader>
+      <SidebarSeparator />
+
       <SidebarContent>
         <SidebarSection title="Menu principal" items={menuPrincipal} />
         <SidebarSection title="Outros" items={others} />

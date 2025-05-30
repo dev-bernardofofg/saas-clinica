@@ -30,7 +30,7 @@ export const SidebarUser = async () => {
                 <AvatarFallback>{session?.user.name}</AvatarFallback>
               </Avatar>{" "}
               <div className="flex flex-col">
-                <span> {session?.clinics.name}</span>
+                <span>{session?.user?.clinic?.name}</span>
                 <span className="text-muted-foreground text-xs">
                   {session?.user.name}
                 </span>

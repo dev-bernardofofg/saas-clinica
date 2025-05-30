@@ -1,3 +1,4 @@
+import { Fade } from "@/components/(motions)/fade";
 import { db } from "@/db";
 import { usersToClinicsTable } from "@/db/schema";
 import { auth } from "@/lib/auth";
@@ -19,10 +20,10 @@ const DashboardPage = async () => {
   }
 
   return (
-    <div>
+    <Fade>
       DashboardPage
       <p>{session?.user?.email}</p>
-    </div>
+    </Fade>
   );
 };
 

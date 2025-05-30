@@ -56,8 +56,10 @@ export function BaseInput<T extends FieldValues>({
               initial={{ opacity: 0, y: -6 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.2 }}
+              className="flex items-center justify-between"
             >
               <FormLabel>{label}</FormLabel>
+              <FormMessage />
             </motion.div>
           )}
 
@@ -124,7 +126,6 @@ export function BaseInput<T extends FieldValues>({
           </FormControl>
 
           {description && <FormDescription>{description}</FormDescription>}
-          <FormMessage />
         </FormItem>
       )}
     />

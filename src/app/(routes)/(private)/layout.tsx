@@ -1,5 +1,6 @@
+import { BaseBreadcrumb } from "@/components/(bases)/base-breadcrumb";
 import { AppSidebar } from "@/components/(layouts)/(sidebar)/sidebar";
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { SidebarProvider } from "@/components/ui/sidebar";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
@@ -19,9 +20,11 @@ const LayoutPrivate = async ({ children }: { children: React.ReactNode }) => {
   return (
     <SidebarProvider>
       <AppSidebar />
-      <main>
-        <SidebarTrigger />
-        {children}
+      <main className="w-full bg-gray-100">
+        <div className="flex flex-col px-6 py-8">
+          <BaseBreadcrumb />
+          {children}
+        </div>
       </main>
     </SidebarProvider>
   );

@@ -28,21 +28,19 @@ export const auth = betterAuth({
           clinic: true,
         },
       });
-
-      const clinic = clinics[0]; // TODO: Handle multiple clinics
-
+      // TODO: Ao adaptar para o usuário ter múltiplas clínicas, deve-se mudar esse código
+      const clinic = clinics?.[0];
       return {
         user: {
           ...user,
-          clinicId: {
-            id: clinic.clinicId,
-          },
+          clinic: clinic?.clinicId
+            ? {
+                id: clinic?.clinicId,
+                name: clinic?.clinic?.name,
+              }
+            : undefined,
         },
         session,
-        clinics: {
-          id: clinic.clinicId,
-          name: clinic.clinic.name,
-        },
       };
     }),
   ],
