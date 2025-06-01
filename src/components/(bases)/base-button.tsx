@@ -26,7 +26,7 @@ export const BaseButton = ({
   const { push } = useRouter();
   return (
     <Button
-      className={cn("w-full space-x-3", className)}
+      className={cn("w-full space-x-3 hover:cursor-pointer", className)}
       disabled={disabled || isLoading}
       onClick={async () => {
         if (clickAction === "sign-out") {

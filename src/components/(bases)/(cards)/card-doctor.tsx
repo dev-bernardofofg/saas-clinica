@@ -1,5 +1,8 @@
+"use client";
+
+import { deleteDoctorAction } from "@/actions/delete-doctor";
 import { UpsertDoctorDialog } from "@/components/(dialog)/upsert-doctor";
-import { Avatar } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import {
   Card,
@@ -11,8 +14,10 @@ import { Separator } from "@/components/ui/separator";
 import { doctorsTable } from "@/db/schema";
 import { formatCurrencyInCents } from "@/helpers/number";
 import { formatDays, formatTimes, getInitialsName } from "@/helpers/string";
-import { AvatarFallback } from "@radix-ui/react-avatar";
-import { CalendarIcon, ClockIcon, DollarSignIcon } from "lucide-react";
+import { CalendarIcon, ClockIcon, DollarSignIcon, Trash } from "lucide-react";
+import { useAction } from "next-safe-action/hooks";
+import { toast } from "sonner";
+import { BaseAlertDialog } from "../(dialog)/base-alert-dialog";
 import { BaseButton } from "../base-button";
 
 interface CardDoctorProps {
@@ -20,9 +25,17 @@ interface CardDoctorProps {
 }
 
 export const CardDoctor = ({ doctor }: CardDoctorProps) => {
+  const handleDeleteDoctor = useAction(deleteDoctorAction, {
+    onSuccess: () => {
+      toast.success("Médico deletado com sucesso");
+    },
+    onError: () => {
+      toast.error("Erro ao deletar médico");
+    },
+  });
   return (
     <Card>
-      <CardHeader className="flex items-center gap-2">
+      <CardHeader className="relative flex items-center gap-2">
         <Avatar className="flex h-10 w-10 items-center justify-center bg-blue-100">
           <AvatarFallback>{getInitialsName(doctor.name)}</AvatarFallback>
         </Avatar>
@@ -30,6 +43,22 @@ export const CardDoctor = ({ doctor }: CardDoctorProps) => {
           <h3 className="text-sm font-medium">{doctor.name}</h3>
           <p className="text-muted-foreground text-sm">{doctor.speciality}</p>
         </div>
+        {doctor && (
+          <BaseAlertDialog
+            title="Deletar médico"
+            description="Tem certeza que deseja deletar o médico? E todas as consultas agendadas serão deletadas."
+            trigger={
+              <BaseButton
+                type="button"
+                variant="ghost"
+                className="text-destructive hover:text-destructive/70 absolute right-2 bottom-4 h-fit w-fit"
+              >
+                <Trash />
+              </BaseButton>
+            }
+            onConfirm={() => handleDeleteDoctor.execute({ id: doctor.id })}
+          />
+        )}
       </CardHeader>
 
       <Separator />

@@ -1,6 +1,6 @@
 "use client";
 
-import { BaseDialog } from "@/components/(bases)/base-dialog";
+import { BaseDialog } from "@/components/(bases)/(dialog)/base-dialog";
 import { UpsertDoctorForm } from "@/components/(forms)/upsert-doctor.form";
 import { doctorsTable } from "@/db/schema";
 import { useState } from "react";

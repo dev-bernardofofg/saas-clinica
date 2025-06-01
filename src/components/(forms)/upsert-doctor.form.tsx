@@ -15,7 +15,7 @@ import {
 import { doctorsTable } from "@/db/schema";
 import { DoctorValues, SchemaDoctor } from "@/schemas/doctor.shema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { IdCard, Mail, Phone } from "lucide-react";
+import { IdCard, Mail, Pen, Phone, Plus } from "lucide-react";
 import { useAction } from "next-safe-action/hooks";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -63,8 +63,6 @@ export const UpsertDoctorForm = ({
   });
 
   const handleUpsertDoctor = (data: DoctorValues) => {
-    console.log(data);
-
     upsertDoctionAction.execute({
       ...data,
       id: doctor?.id,
@@ -73,6 +71,7 @@ export const UpsertDoctorForm = ({
       appointmentPriceInCents: data.appointmentPrice * 100,
     });
   };
+
   return (
     <Form {...form}>
       <BaseForm
@@ -156,20 +155,21 @@ export const UpsertDoctorForm = ({
           placeholder="Selecione o horário de término"
           optionGroups={timeOptionsGrouped}
         />
+        <div className="col-span-2 flex flex-col gap-1">
+          <BaseButton type="submit" disabled={upsertDoctionAction.isExecuting}>
+            {doctor
+              ? !upsertDoctionAction.isExecuting && <Pen />
+              : !upsertDoctionAction.isExecuting && <Plus />}
 
-        <BaseButton
-          type="submit"
-          className="col-span-2"
-          disabled={upsertDoctionAction.isExecuting}
-        >
-          {doctor
-            ? upsertDoctionAction.isExecuting
-              ? "Editando..."
-              : "Editar"
-            : upsertDoctionAction.isExecuting
-              ? "Salvando..."
-              : "Salvar"}
-        </BaseButton>
+            {doctor
+              ? upsertDoctionAction.isExecuting
+                ? "Editando..."
+                : "Editar"
+              : upsertDoctionAction.isExecuting
+                ? "Salvando..."
+                : "Salvar"}
+          </BaseButton>
+        </div>
       </BaseForm>
     </Form>
   );
