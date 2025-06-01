@@ -1,6 +1,12 @@
 import type { Metadata } from "next";
+import { Manrope } from "next/font/google";
 import { Toaster } from "sonner";
 import "./globals.css";
+
+const manrope = Manrope({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+});
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -14,7 +20,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`antialiased`} suppressHydrationWarning>
+      <body
+        className={`${manrope.className} antialiased`}
+        suppressHydrationWarning
+      >
         {children}
         <Toaster position="top-center" richColors />
       </body>

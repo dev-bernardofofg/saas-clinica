@@ -1,21 +1,33 @@
 "use client";
 
-import { BaseButton } from "@/components/(bases)/base-button";
 import { BaseDialog } from "@/components/(bases)/base-dialog";
 import { UpsertDoctorForm } from "@/components/(forms)/upsert-doctor.form";
+import { doctorsTable } from "@/db/schema";
 import { useState } from "react";
 
-export const UpsertDoctorDialog = () => {
+interface UpsertDoctorDialogProps {
+  doctor?: typeof doctorsTable.$inferSelect;
+  trigger?: React.ReactNode;
+}
+
+export const UpsertDoctorDialog = ({
+  doctor,
+  trigger,
+}: UpsertDoctorDialogProps) => {
   const [open, setOpen] = useState(false);
   return (
     <BaseDialog
       open={open}
       setOpen={setOpen}
-      trigger={<BaseButton clickAction="create">Adicionar Médico</BaseButton>}
-      title="Adicionar Médico"
-      description="Adicione um novo médico para a sua clínica"
+      trigger={trigger}
+      title={doctor ? doctor.name : "Adicionar Médico"}
+      description={
+        doctor
+          ? "Edite as informações do médico"
+          : "Adicione um novo médico para a sua clínica"
+      }
     >
-      <UpsertDoctorForm onSuccess={() => setOpen(false)} />
+      <UpsertDoctorForm doctor={doctor} onSuccess={() => setOpen(false)} />
     </BaseDialog>
   );
 };

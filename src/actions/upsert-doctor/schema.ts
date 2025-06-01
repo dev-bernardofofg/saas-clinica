@@ -22,9 +22,9 @@ export const upsertDoctorSchema = z
     appointmentPriceInCents: z.number().min(1, {
       message: "*",
     }),
-    avaliableFromWeekDay: z.coerce.number().min(0).max(6),
+    availableFromWeekDay: z.coerce.number().min(0).max(6),
     availableToWeekDay: z.coerce.number().min(0).max(6),
-    avaliableFromTime: z.string().min(1, {
+    availableFromTime: z.string().min(1, {
       message: "*",
     }),
     availableToTime: z.string().min(1, {
@@ -32,7 +32,7 @@ export const upsertDoctorSchema = z
     }),
     isActive: z.boolean().default(true),
   })
-  .refine((data) => data.avaliableFromTime <= data.availableToTime, {
+  .refine((data) => data.availableFromTime <= data.availableToTime, {
     message: "O horário de início deve ser menor que o horário de término",
     path: ["availableToTime"],
   });

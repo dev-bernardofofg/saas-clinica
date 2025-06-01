@@ -1,26 +1,36 @@
 import { CardDoctor } from "@/components/(bases)/(cards)/card-doctor";
+import { BaseButton } from "@/components/(bases)/base-button";
 import { UpsertDoctorDialog } from "@/components/(dialog)/upsert-doctor";
 import { Header } from "@/components/(layouts)/header";
 import { Fade } from "@/components/(motions)/fade";
+import { db } from "@/db";
+import { doctorsTable } from "@/db/schema";
+import { getCurrentClinicId } from "@/lib/session";
+import { eq } from "drizzle-orm";
 
-const DoctorsPage = () => {
+const DoctorsPage = async () => {
+  const clinicId = await getCurrentClinicId();
+  const doctors = await db.query.doctorsTable.findMany({
+    where: eq(doctorsTable.clinicId, clinicId),
+  });
   return (
     <Fade>
       <Header
         title="Médicos"
         description="Gerencie os médicos da sua clínica"
-        actions={<UpsertDoctorDialog />}
+        actions={
+          <UpsertDoctorDialog
+            trigger={
+              <BaseButton clickAction="create">Adicionar Médico</BaseButton>
+            }
+          />
+        }
       />
 
       <div className="grid grid-cols-4 gap-4">
-        <CardDoctor
-          name="Dr. João Silva"
-          speciality="pediatria"
-          cost={150}
-          image="/doctors/joao-silva.jpg"
-          days={["Segunda", "Quarta", "Sexta"]}
-          time={["09:00", "10:00", "11:00"]}
-        />
+        {doctors.map((doctor) => (
+          <CardDoctor key={doctor.id} doctor={doctor} />
+        ))}
       </div>
     </Fade>
   );

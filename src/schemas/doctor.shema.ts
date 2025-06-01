@@ -21,9 +21,9 @@ export const SchemaDoctor = z
     appointmentPrice: z.number().min(1, {
       message: "*",
     }),
-    avaliableFromWeekDay: z.coerce.number(),
-    availableToWeekDay: z.coerce.number(),
-    avaliableFromTime: z.string().min(1, {
+    availableFromWeekDay: z.string(),
+    availableToWeekDay: z.string(),
+    availableFromTime: z.string().min(1, {
       message: "*",
     }),
     availableToTime: z.string().min(1, {
@@ -31,24 +31,9 @@ export const SchemaDoctor = z
     }),
     isActive: z.boolean().default(true),
   })
-  .refine((data) => data.avaliableFromTime <= data.availableToTime, {
+  .refine((data) => data.availableFromTime <= data.availableToTime, {
     message: "O horário de início deve ser menor que o horário de término",
     path: ["availableToTime"],
   });
-
-export const SchemaDoctorValues = {
-  name: "",
-  email: "",
-  phoneNumber: "",
-  avatarImageUrl: "",
-  speciality: "",
-  professionalId: "",
-  appointmentPrice: 0,
-  avaliableFromWeekDay: 0,
-  availableToWeekDay: 0,
-  avaliableFromTime: "",
-  availableToTime: "",
-  isActive: true,
-};
 
 export type DoctorValues = z.infer<typeof SchemaDoctor>;

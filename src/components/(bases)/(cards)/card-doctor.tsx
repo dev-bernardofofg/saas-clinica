@@ -1,72 +1,58 @@
+import { UpsertDoctorDialog } from "@/components/(dialog)/upsert-doctor";
 import { Avatar } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import {
   Card,
-  CardDescription,
+  CardContent,
   CardFooter,
   CardHeader,
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import {
-  doctorspeciality,
-  formatTimes,
-  getInitialsName,
-} from "@/helpers/string";
+import { doctorsTable } from "@/db/schema";
+import { formatCurrencyInCents } from "@/helpers/number";
+import { formatDays, formatTimes, getInitialsName } from "@/helpers/string";
 import { AvatarFallback } from "@radix-ui/react-avatar";
-import { Clock } from "lucide-react";
+import { CalendarIcon, ClockIcon, DollarSignIcon } from "lucide-react";
 import { BaseButton } from "../base-button";
-import Icon from "../base-icon";
 
 interface CardDoctorProps {
-  name: string;
-  speciality: string;
-  cost: number;
-  image: string;
-  days: string[];
-  time: string[];
+  doctor: typeof doctorsTable.$inferSelect;
 }
 
-export const CardDoctor = ({
-  name,
-  speciality,
-  cost,
-  image,
-  days,
-  time,
-}: CardDoctorProps) => {
+export const CardDoctor = ({ doctor }: CardDoctorProps) => {
   return (
-    <Card className="p-5">
-      <CardHeader className="flex items-center gap-2 p-0">
-        <Avatar className="size-[72px] rounded-full">
-          <AvatarFallback>{getInitialsName(name)}</AvatarFallback>
+    <Card>
+      <CardHeader className="flex items-center gap-2">
+        <Avatar className="flex h-10 w-10 items-center justify-center bg-blue-100">
+          <AvatarFallback>{getInitialsName(doctor.name)}</AvatarFallback>
         </Avatar>
-        <div className="flex flex-col items-center gap-1.5">
-          <p className="text-lg font-bold">{name}</p>
-          <div className="text-sm text-gray-500">
-            <div className="flex size-5 items-center justify-center rounded-full p-1">
-              <Icon name={doctorspeciality(speciality)} />
-            </div>
-            <span className="capitalize">{speciality}</span>{" "}
-          </div>
+        <div>
+          <h3 className="text-sm font-medium">{doctor.name}</h3>
+          <p className="text-muted-foreground text-sm">{doctor.speciality}</p>
         </div>
       </CardHeader>
 
       <Separator />
-      <CardDescription>
-        <div className="flex flex-col gap-2">
-          <Badge variant="secondary">
-            <div className="flex items-center gap-2">
-              <span>
-                <Clock size={16} />
-              </span>
-              {formatTimes(time)}
-            </div>
-            {cost}
-          </Badge>
-        </div>
-      </CardDescription>
-      <CardFooter className="p-0">
-        <BaseButton>Ver detalhes</BaseButton>
+      <CardContent className="flex flex-col gap-2">
+        <Badge>
+          <CalendarIcon className="mr-1" />
+          {formatDays([doctor.availableFromWeekDay, doctor.availableToWeekDay])}
+        </Badge>
+        <Badge>
+          <ClockIcon className="mr-1" />
+          {formatTimes([doctor.availableFromTime, doctor.availableToTime])}
+        </Badge>
+        <Badge>
+          <DollarSignIcon className="mr-1" />
+          {formatCurrencyInCents(doctor.appointmentPriceInCents)}
+        </Badge>
+      </CardContent>
+      <Separator />
+      <CardFooter>
+        <UpsertDoctorDialog
+          doctor={doctor}
+          trigger={<BaseButton>Ver detalhes</BaseButton>}
+        />
       </CardFooter>
     </Card>
   );

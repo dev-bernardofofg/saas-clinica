@@ -31,48 +31,58 @@ export const doctorspeciality = (speciality: string): LucideIcon => {
   }
 };
 
-const weekDaysOrder = [
-  "Domingo",
-  "Segunda",
-  "Terça",
-  "Quarta",
-  "Quinta",
-  "Sexta",
-  "Sábado",
-];
+const weekDaysOrder: Record<number, string> = {
+  0: "Segunda-feira",
+  1: "Terça-feira",
+  2: "Quarta-feira",
+  3: "Quinta-feira",
+  4: "Sexta-feira",
+  5: "Sábado",
+  6: "Domingo",
+};
 
-export function formatDays(days: string[]): string {
+export function formatDays(days: number[]): string {
   if (!days.length) return "";
 
-  const indexes = days
-    .map((day) => weekDaysOrder.indexOf(day))
-    .sort((a, b) => a - b);
+  // Ordena os dias numericamente
+  const sortedDays = [...days].sort((a, b) => a - b);
 
-  const isConsecutive = indexes.every((val, i, arr) =>
+  // Verifica se são dias consecutivos
+  const isConsecutive = sortedDays.every((val, i, arr) =>
     i === 0 ? true : val === arr[i - 1] + 1,
   );
 
-  if (isConsecutive && indexes.length > 1) {
-    const first = weekDaysOrder[indexes[0]];
-    const last = weekDaysOrder[indexes[indexes.length - 1]];
+  if (isConsecutive && sortedDays.length > 1) {
+    const first = weekDaysOrder[sortedDays[0]];
+    const last = weekDaysOrder[sortedDays[sortedDays.length - 1]];
     return `${first} a ${last}`;
   }
 
-  if (days.length === 2) return days.join(" e ");
-
-  return days.slice(0, -1).join(", ") + " e " + days[days.length - 1];
+  // Caso contrário, retorna formatado com "e"
+  const namedDays = sortedDays.map((d) => weekDaysOrder[d]);
+  if (namedDays.length === 2) return namedDays.join(" e ");
+  return (
+    namedDays.slice(0, -1).join(", ") + " e " + namedDays[namedDays.length - 1]
+  );
 }
 
 export function formatTimes(times: string[]): string {
   if (!times.length) return "";
 
   const toMinutes = (time: string) => {
-    const [h, m] = time.split(":").map(Number);
-    return h * 60 + m;
+    const [hours, minutes] = time.split(":").map(Number);
+    return hours * 60 + minutes;
   };
 
-  const sorted = times.sort((a, b) => toMinutes(a) - toMinutes(b));
-  const indexes = sorted.map(toMinutes);
+  const formatTime = (time: string) => {
+    const [hours, minutes] = time.split(":");
+    return `${hours.padStart(2, "0")}:${minutes.padStart(2, "0")}`;
+  };
+
+  const sorted = times
+    .sort((a, b) => toMinutes(a) - toMinutes(b))
+    .map(formatTime);
+  const indexes = sorted.map((time) => toMinutes(time));
 
   const isConsecutive = indexes.every((val, i, arr) =>
     i === 0 ? true : val === arr[i - 1] + 60,
@@ -82,7 +92,7 @@ export function formatTimes(times: string[]): string {
     return `${sorted[0]} às ${sorted[sorted.length - 1]}`;
   }
 
-  if (times.length === 2) return sorted.join(" e ");
+  if (times.length === 2) return sorted.join(" às ");
 
   return sorted.slice(0, -1).join(", ") + " e " + sorted[sorted.length - 1];
 }

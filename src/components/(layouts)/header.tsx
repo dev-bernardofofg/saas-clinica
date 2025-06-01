@@ -8,7 +8,7 @@ interface HeaderProps {
 
 export const Header = ({ title, description, actions }: HeaderProps) => {
   return (
-    <div className="flex w-full items-center justify-between">
+    <div className="mb-6 flex w-full items-center justify-between">
       <div className="gap-.5 flex flex-col">
         <h1 className="text-2xl font-bold">{title}</h1>
         <p className="text-muted-foreground text-sm">{description}</p>

@@ -123,9 +123,9 @@ export const doctorsTable = pgTable("doctors", {
   avatarImageUrl: text("avatar_image_url"),
   speciality: varchar("speciality", { length: 100 }).notNull(),
   professionalId: varchar("professional_id", { length: 50 }), // For medical license numbers
-  avaliableFromWeekDay: integer("avaliable_from_week_day").notNull(),
+  availableFromWeekDay: integer("available_from_week_day").notNull(),
   availableToWeekDay: integer("available_to_week_day").notNull(),
-  avaliableFromTime: time("avaliable_from_time").notNull(),
+  availableFromTime: time("available_from_time").notNull(),
   availableToTime: time("available_to_time").notNull(),
   appointmentDurationMinutes: integer("appointment_duration_minutes")
     .notNull()

@@ -57,12 +57,13 @@ export const BaseSelect = <T extends FieldValues>({
               <FormMessage />
             </motion.div>
           )}
+
           <FormControl>
             <Select
               value={field.value ? String(field.value) : ""}
               onValueChange={field.onChange}
             >
-              <SelectTrigger className="h-9 w-full">
+              <SelectTrigger className="h-9 w-full truncate">
                 <SelectValue placeholder={placeholder} />
               </SelectTrigger>
               <SelectContent>
@@ -85,6 +86,7 @@ export const BaseSelect = <T extends FieldValues>({
                       <SelectItem
                         key={option.value}
                         value={String(option.value)}
+                        className="truncate"
                       >
                         {option.label}
                       </SelectItem>

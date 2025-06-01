@@ -12,11 +12,8 @@ import {
   medicalSpecialties,
   timeOptionsGrouped,
 } from "@/constants";
-import {
-  DoctorValues,
-  SchemaDoctor,
-  SchemaDoctorValues,
-} from "@/schemas/doctor.shema";
+import { doctorsTable } from "@/db/schema";
+import { DoctorValues, SchemaDoctor } from "@/schemas/doctor.shema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { IdCard, Mail, Phone } from "lucide-react";
 import { useAction } from "next-safe-action/hooks";
@@ -24,29 +21,54 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
 interface UpsertDoctorFormProps {
+  doctor?: typeof doctorsTable.$inferSelect;
   onSuccess: () => void;
 }
 
-export const UpsertDoctorForm = ({ onSuccess }: UpsertDoctorFormProps) => {
+export const UpsertDoctorForm = ({
+  doctor,
+  onSuccess,
+}: UpsertDoctorFormProps) => {
   const form = useForm({
+    shouldUnregister: true,
     resolver: zodResolver(SchemaDoctor),
-    defaultValues: SchemaDoctorValues,
+    defaultValues: {
+      name: doctor?.name ?? "",
+      email: doctor?.email ?? "",
+      phoneNumber: doctor?.phoneNumber ?? "",
+      avatarImageUrl: doctor?.avatarImageUrl ?? "",
+      speciality: doctor?.speciality ?? "",
+      professionalId: doctor?.professionalId ?? "",
+      appointmentPrice: doctor?.appointmentPriceInCents
+        ? doctor.appointmentPriceInCents / 100
+        : 0,
+      availableFromWeekDay: doctor?.availableFromWeekDay?.toString() ?? "1",
+      availableToWeekDay: doctor?.availableToWeekDay?.toString() ?? "5",
+      availableFromTime: doctor?.availableFromTime ?? "",
+      availableToTime: doctor?.availableToTime ?? "",
+      isActive: doctor?.isActive ?? true,
+    },
   });
 
   const upsertDoctionAction = useAction(upsertDoctor, {
     onSuccess: () => {
-      toast.success("Médico criado com sucesso");
+      toast.success(
+        doctor ? "Médico atualizado com sucesso" : "Médico criado com sucesso",
+      );
       onSuccess();
     },
     onError: () => {
-      toast.error("Erro ao criar médico");
+      toast.error(doctor ? "Erro ao atualizar médico" : "Erro ao criar médico");
     },
   });
 
   const handleUpsertDoctor = (data: DoctorValues) => {
+    console.log(data);
+
     upsertDoctionAction.execute({
       ...data,
-      avaliableFromWeekDay: Number(data.avaliableFromWeekDay),
+      id: doctor?.id,
+      availableFromWeekDay: Number(data.availableFromWeekDay),
       availableToWeekDay: Number(data.availableToWeekDay),
       appointmentPriceInCents: data.appointmentPrice * 100,
     });
@@ -105,7 +127,7 @@ export const UpsertDoctorForm = ({ onSuccess }: UpsertDoctorFormProps) => {
 
         <BaseSelect
           control={form.control}
-          name="avaliableFromWeekDay"
+          name="availableFromWeekDay"
           label="Intervalo inicial de atendimento"
           placeholder="Selecione o intervalo inicial"
           options={daysOfWeek}
@@ -121,7 +143,7 @@ export const UpsertDoctorForm = ({ onSuccess }: UpsertDoctorFormProps) => {
 
         <BaseSelect
           control={form.control}
-          name="avaliableFromTime"
+          name="availableFromTime"
           label="Horário de início"
           placeholder="Selecione o horário de início"
           optionGroups={timeOptionsGrouped}
@@ -140,7 +162,13 @@ export const UpsertDoctorForm = ({ onSuccess }: UpsertDoctorFormProps) => {
           className="col-span-2"
           disabled={upsertDoctionAction.isExecuting}
         >
-          {upsertDoctionAction.isExecuting ? "Salvando..." : "Salvar"}
+          {doctor
+            ? upsertDoctionAction.isExecuting
+              ? "Editando..."
+              : "Editar"
+            : upsertDoctionAction.isExecuting
+              ? "Salvando..."
+              : "Salvar"}
         </BaseButton>
       </BaseForm>
     </Form>

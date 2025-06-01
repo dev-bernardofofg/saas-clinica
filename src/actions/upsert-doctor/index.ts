@@ -4,8 +4,10 @@ import { db } from "@/db";
 import { doctorsTable } from "@/db/schema";
 import { auth } from "@/lib/auth";
 import { actionClient } from "@/lib/next-safe-action";
+import { getCurrentClinicId } from "@/lib/session";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
+import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
 import { upsertDoctorSchema } from "./schema";
 
@@ -14,15 +16,15 @@ dayjs.extend(utc);
 export const upsertDoctor = actionClient
   .schema(upsertDoctorSchema)
   .action(async ({ parsedInput }) => {
-    const availableFromTime = parsedInput.avaliableFromTime;
+    const availableFromTime = parsedInput.availableFromTime;
     const availableToTime = parsedInput.availableToTime;
 
-    const avaliableFromTimeUTC = dayjs()
+    const availableFromTimeUTC = dayjs()
       .set("hour", parseInt(availableFromTime.split(":")[0]))
       .set("minute", parseInt(availableFromTime.split(":")[1]))
       .set("second", parseInt(availableFromTime.split(":")[2]))
       .utc();
-    const avaliableToTimeUTC = dayjs()
+    const availableToTimeUTC = dayjs()
       .set("hour", parseInt(availableToTime.split(":")[0]))
       .set("minute", parseInt(availableToTime.split(":")[1]))
       .set("second", parseInt(availableToTime.split(":")[2]))
@@ -40,14 +42,16 @@ export const upsertDoctor = actionClient
       throw new Error("Clinic not found");
     }
 
+    const clinicId = await getCurrentClinicId();
+
     await db
       .insert(doctorsTable)
       .values({
-        clinicId: session.user.clinic.id,
+        clinicId,
         ...parsedInput,
         email: parsedInput.email || "",
-        avaliableFromTime: avaliableFromTimeUTC.format("HH:mm:ss"),
-        availableToTime: avaliableToTimeUTC.format("HH:mm:ss"),
+        availableFromTime: availableFromTimeUTC.format("HH:mm:ss"),
+        availableToTime: availableToTimeUTC.format("HH:mm:ss"),
       })
       .onConflictDoUpdate({
         target: [doctorsTable.id],
@@ -56,4 +60,5 @@ export const upsertDoctor = actionClient
           email: parsedInput.email || "",
         },
       });
+    revalidatePath("/doctors");
   });
