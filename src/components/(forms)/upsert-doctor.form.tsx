@@ -42,8 +42,8 @@ export const UpsertDoctorForm = ({
       appointmentPrice: doctor?.appointmentPriceInCents
         ? doctor.appointmentPriceInCents / 100
         : 0,
-      availableFromWeekDay: doctor?.availableFromWeekDay?.toString() ?? "1",
-      availableToWeekDay: doctor?.availableToWeekDay?.toString() ?? "5",
+      availableFromWeekDay: doctor?.availableFromWeekDay?.toString() ?? "0",
+      availableToWeekDay: doctor?.availableToWeekDay?.toString() ?? "4",
       availableFromTime: doctor?.availableFromTime ?? "",
       availableToTime: doctor?.availableToTime ?? "",
       isActive: doctor?.isActive ?? true,
