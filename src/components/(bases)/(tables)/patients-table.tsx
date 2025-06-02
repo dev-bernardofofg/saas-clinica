@@ -1,12 +1,17 @@
 "use client";
 
+import { deletePatient } from "@/actions/delete-patient";
 import { UpsertPatientDialog } from "@/components/(dialog)/upsert-patient";
+import { ViewPatientDialog } from "@/components/(dialog)/view-patient";
 import { Badge } from "@/components/ui/badge";
 import { patientsTable } from "@/db/schema";
 import { formatPhoneNumber } from "@/helpers/number";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { ExternalLink } from "lucide-react";
+import { ClipboardPlus, PencilLine, Trash } from "lucide-react";
+import { useAction } from "next-safe-action/hooks";
+import { toast } from "sonner";
+import { BaseAlertDialog } from "../(dialog)/base-alert-dialog";
 import { BaseButton } from "../base-button";
 import { BaseTable } from "../base-table";
 
@@ -17,6 +22,15 @@ interface PatientsTableProps {
 }
 
 export function PatientsTable({ patients }: PatientsTableProps) {
+  const { execute: executeDelete } = useAction(deletePatient, {
+    onSuccess: () => {
+      toast.success("Paciente excluído com sucesso!");
+    },
+    onError: (error) => {
+      toast.error("Erro ao excluir paciente");
+    },
+  });
+
   return (
     <BaseTable
       data={patients}
@@ -65,18 +79,46 @@ export function PatientsTable({ patients }: PatientsTableProps) {
         },
       ]}
       actions={(patient) => (
-        <UpsertPatientDialog
-          patient={patient}
-          trigger={
-            <BaseButton
-              variant="ghost"
-              type="button"
-              className="text-muted-foreground hover:text-foreground"
-            >
-              <ExternalLink className="size-4" />
-            </BaseButton>
-          }
-        />
+        <div className="flex items-center gap-2">
+          <ViewPatientDialog
+            patient={patient}
+            trigger={
+              <BaseButton
+                variant="ghost"
+                type="button"
+                className="text-muted-foreground hover:text-foreground w-fit"
+              >
+                <ClipboardPlus className="size-4" />
+              </BaseButton>
+            }
+          />
+          <UpsertPatientDialog
+            patient={patient}
+            trigger={
+              <BaseButton
+                variant="ghost"
+                type="button"
+                className="text-muted-foreground hover:text-foreground w-fit"
+              >
+                <PencilLine className="size-4" />
+              </BaseButton>
+            }
+          />
+          <BaseAlertDialog
+            title="Excluir Paciente"
+            description="Tem certeza que deseja excluir o paciente?"
+            trigger={
+              <BaseButton
+                variant="ghost"
+                type="button"
+                className="text-muted-foreground hover:text-foreground w-fit"
+              >
+                <Trash className="size-4" />
+              </BaseButton>
+            }
+            onConfirm={() => executeDelete({ id: patient.id })}
+          />
+        </div>
       )}
     />
   );

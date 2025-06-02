@@ -43,7 +43,7 @@ export function BaseTable<T>({
                 {column.header}
               </TableHead>
             ))}
-            {actions && <TableHead className="w-14">Ações</TableHead>}
+            {actions && <TableHead className="w-14"></TableHead>}
           </TableRow>
         </TableHeader>
         <TableBody>
