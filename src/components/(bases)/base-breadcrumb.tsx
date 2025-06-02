@@ -24,6 +24,8 @@ export const BaseBreadcrumb = () => {
         return "Planos";
       case "doctors":
         return "Médicos";
+      case "patients":
+        return "Pacientes";
       default:
         return path;
     }

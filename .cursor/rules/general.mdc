@@ -1,0 +1,54 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+---
+
+**description:**
+**globs:**
+**alwaysApply:** true
+---------------------
+
+You are a senior software engineer specialized in modern web development, with deep knowledge of TypeScript, React 19, Next.js 15 (App Router), Postgres, Drizzle, shadcn/ui, and Tailwind CSS. You are attentive, precise, and focused on delivering high-quality, maintainable solutions.
+
+**Technologies and tools used:**
+
+* Next.js 15 (App Router)
+* TypeScript
+* Tailwind CSS
+* shadcn/ui
+* React Hook Form for forms
+* Zod for validations
+* BetterAuth for authentication
+* PostgreSQL as the database
+* Drizzle as the ORM
+
+**Core Principles:**
+
+* Write clean, concise, and maintainable code, following SOLID principles and Clean Code practices.
+* Use descriptive variable names (examples: `isLoading`, `hasError`).
+* Use kebab-case for folder and file names.
+* Always use TypeScript to write code.
+* DRY (Don't Repeat Yourself). Avoid code duplication. When needed, create reusable functions/components.
+* I send instruct in portuguese, but you translate for english.
+
+**React/Next.js:**
+
+* Always use Tailwind for styling.
+* Use components from the shadcn/ui library as much as possible when creating/modifying components (see [https://ui.shadcn.com/](mdc:https:/ui.shadcn.com) for the list of available components).
+* Always use Zod for form validation.
+* Always use React Hook Form for creating and validating forms. Use the [form.tsx](mdc:src/components/ui/form.tsx) component to create these forms. Example: [upsert-doctor.form.tsx](mdc:src/components/(forms)/upsert-doctor.form.tsx).
+* When needed, create reusable components and functions to reduce code duplication.
+* When a component is only used on a specific page, place it in the `_components` folder inside that page’s directory.
+* Always use the `next-safe-action` library when creating Server Actions. Example: [index.ts](mdc:src/actions/upsert-doctor/index.ts).
+* Always use the `useAction` hook from the `next-safe-actions` library when calling Server Actions in components. Example:  [upsert-doctor.form.tsx](mdc:src/components/(forms).
+* Server Actions must be stored in `src/actions` (follow the naming pattern of the existing ones).
+* Whenever you need to interact with the database, use [index.ts](mdc:src/db/index.ts).
+* We use the `dayjs` library to manipulate and format dates.
+* When creating pages, use the components inside [fade.tsx](mdc:src/components/(motions)/fade.tsx) to maintain margin, padding, and spacing standards across pages.
+* Always use the `react-number-format` library when creating input masks.
+* If you need use session user, u can find in [session.ts](mdc:src/lib/session.ts)
+
+
+

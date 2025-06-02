@@ -23,7 +23,7 @@ type BaseInputProps<T extends FieldValues> = {
   placeholder?: string;
   description?: string;
   Icon?: LucideIcon;
-  type?: "text" | "email" | "password" | "number";
+  type?: "text" | "email" | "password" | "number" | "date";
   inline?: boolean;
 };
 
@@ -80,7 +80,7 @@ export function BaseInput<T extends FieldValues>({
                     {Icon && <Icon className="size-4" />}
                   </div>
                   <Input
-                    type={isPassword && !showPassword ? "password" : "text"}
+                    type={isPassword && !showPassword ? "password" : type}
                     {...field}
                     placeholder={placeholder}
                     className={cn(Icon && "pl-10", isPassword && "pr-10")}
