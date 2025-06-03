@@ -42,6 +42,8 @@ type BaseDatePickerProps<T extends FieldValues> = {
   maxDate?: Date;
   fromYear?: number;
   toYear?: number;
+  isDateAvaliable?: (date: Date) => boolean;
+  isDateDisabled?: string;
 };
 
 export function BaseDatePicker<T extends FieldValues>({
@@ -56,6 +58,8 @@ export function BaseDatePicker<T extends FieldValues>({
   maxDate,
   fromYear = 1900,
   toYear = new Date().getFullYear(),
+  isDateAvaliable,
+  isDateDisabled,
 }: BaseDatePickerProps<T>) {
   const methods = useFormContext<T>();
   const finalControl = control || methods.control;
@@ -109,6 +113,7 @@ export function BaseDatePicker<T extends FieldValues>({
                     "w-full justify-start text-left font-normal",
                     !field.value && "text-muted-foreground",
                   )}
+                  disabled={!isDateDisabled}
                 >
                   <CalendarIcon className="mr-2 size-4" />
                   {field.value ? (
@@ -193,6 +198,11 @@ export function BaseDatePicker<T extends FieldValues>({
                     if (disablePastDates && date < new Date()) return true;
                     if (minDate && date < minDate) return true;
                     if (maxDate && date > maxDate) return true;
+                    if (
+                      date < new Date() ||
+                      (isDateAvaliable && !isDateAvaliable(date))
+                    )
+                      return true;
                     return false;
                   }}
                   initialFocus

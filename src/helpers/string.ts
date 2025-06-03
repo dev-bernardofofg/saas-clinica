@@ -60,9 +60,9 @@ export function formatDays(days: number[]): string {
 
   // Caso contrário, retorna formatado com "e"
   const namedDays = sortedDays.map((d) => weekDaysOrder[d]);
-  if (namedDays.length === 2) return namedDays.join(" e ");
+  if (namedDays.length === 2) return namedDays.join(" a ");
   return (
-    namedDays.slice(0, -1).join(", ") + " e " + namedDays[namedDays.length - 1]
+    namedDays.slice(0, -1).join(", ") + "e " + namedDays[namedDays.length - 1]
   );
 }
 

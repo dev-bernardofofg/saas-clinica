@@ -1,3 +1,4 @@
+import { ReactQueryProvider } from "@/providers/react-query";
 import type { Metadata } from "next";
 import { Manrope } from "next/font/google";
 import { Toaster } from "sonner";
@@ -24,7 +25,7 @@ export default function RootLayout({
         className={`${manrope.className} antialiased`}
         suppressHydrationWarning
       >
-        {children}
+        <ReactQueryProvider>{children}</ReactQueryProvider>
         <Toaster position="top-center" richColors />
       </body>
     </html>

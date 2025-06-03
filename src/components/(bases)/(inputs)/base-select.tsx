@@ -29,6 +29,8 @@ export interface IBaseSelect<T extends FieldValues> {
   options?: Option[];
   optionGroups?: OptionGroup[];
   description?: string;
+  disabled?: string | boolean;
+  selectDate?: string | boolean;
 }
 
 export const BaseSelect = <T extends FieldValues>({
@@ -39,6 +41,8 @@ export const BaseSelect = <T extends FieldValues>({
   options = [],
   optionGroups = [],
   description,
+  disabled = false,
+  selectDate = false,
 }: IBaseSelect<T>) => {
   return (
     <FormField
@@ -62,12 +66,12 @@ export const BaseSelect = <T extends FieldValues>({
             <Select
               value={field.value ? String(field.value) : ""}
               onValueChange={field.onChange}
+              disabled={Boolean(disabled || selectDate)}
             >
               <SelectTrigger className="h-9 w-full truncate">
                 <SelectValue placeholder={placeholder} />
               </SelectTrigger>
               <SelectContent>
-                {/* Se tiver grupos, renderiza com SelectGroup */}
                 {optionGroups.length > 0
                   ? optionGroups.map((group) => (
                       <SelectGroup key={group.label}>
@@ -94,6 +98,7 @@ export const BaseSelect = <T extends FieldValues>({
               </SelectContent>
             </Select>
           </FormControl>
+
           {description && <FormDescription>{description}</FormDescription>}
         </FormItem>
       )}

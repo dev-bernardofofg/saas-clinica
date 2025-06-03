@@ -46,7 +46,7 @@ export function AppointmentsTable({
         },
         {
           header: "ESPECIALIDADE",
-          accessorKey: "doctor",
+          accessorKey: "doctorId",
           cell: (_, appointment) => appointment.doctor.speciality,
         },
         {

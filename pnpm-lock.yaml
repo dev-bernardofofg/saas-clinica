@@ -47,6 +47,9 @@ importers:
       '@react-input/mask':
         specifier: ^2.0.4
         version: 2.0.4(@types/react@19.1.5)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      '@tanstack/react-query':
+        specifier: ^5.79.2
+        version: 5.79.2(react@19.1.0)
       better-auth:
         specifier: ^1.2.8
         version: 1.2.8
@@ -1341,6 +1344,14 @@ packages:
 
   '@tailwindcss/postcss@4.1.7':
     resolution: {integrity: sha512-88g3qmNZn7jDgrrcp3ZXEQfp9CVox7xjP1HN2TFKI03CltPVd/c61ydn5qJJL8FYunn0OqBaW5HNUga0kmPVvw==}
+
+  '@tanstack/query-core@5.79.2':
+    resolution: {integrity: sha512-kr+KQrBuqd6495eP9S41BoftFI1H50XA9O+6FmbnTx/Te6bjiq1mj8rt9rJjW3YZSO2aaUNUres0TWesJW1j1g==}
+
+  '@tanstack/react-query@5.79.2':
+    resolution: {integrity: sha512-kadeprsH6bWuhHCpqukXHRykJkxcLBxAaF0cQ05yawPmLZ/KiCpR1DyQenonF7A/70rnRUxhJD0RJejqk9wImQ==}
+    peerDependencies:
+      react: ^18 || ^19
 
   '@tybys/wasm-util@0.9.0':
     resolution: {integrity: sha512-6+7nlbMVX/PVDCwaIQ8nTOPveOcFLSt8GcXdx8hD0bt39uWxYT88uXzqTd4fTvqta7oeUJqudepapKNt2DYJFw==}
@@ -4136,6 +4147,13 @@ snapshots:
       '@tailwindcss/oxide': 4.1.7
       postcss: 8.5.3
       tailwindcss: 4.1.7
+
+  '@tanstack/query-core@5.79.2': {}
+
+  '@tanstack/react-query@5.79.2(react@19.1.0)':
+    dependencies:
+      '@tanstack/query-core': 5.79.2
+      react: 19.1.0
 
   '@tybys/wasm-util@0.9.0':
     dependencies:
