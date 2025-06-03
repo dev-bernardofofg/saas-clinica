@@ -1,11 +1,16 @@
 "use client";
 
+import { deleteAppointment } from "@/actions/delete-appointment";
 import { Badge } from "@/components/ui/badge";
 import { appointmentsTable } from "@/db/schema";
 import { formatCurrencyInCents } from "@/helpers/number";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { ArrowUpRight } from "lucide-react";
+import { Trash } from "lucide-react";
+import { useAction } from "next-safe-action/hooks";
+import { toast } from "sonner";
+import { BaseAlertDialog } from "../(dialog)/base-alert-dialog";
+import { BaseButton } from "../base-button";
 import { BaseTable } from "../base-table";
 
 type Appointment = typeof appointmentsTable.$inferSelect & {
@@ -15,13 +20,17 @@ type Appointment = typeof appointmentsTable.$inferSelect & {
 
 interface AppointmentsTableProps {
   appointments: Appointment[];
-  onAppointmentClick?: (appointment: Appointment) => void;
 }
 
-export function AppointmentsTable({
-  appointments,
-  onAppointmentClick,
-}: AppointmentsTableProps) {
+export function AppointmentsTable({ appointments }: AppointmentsTableProps) {
+  const { execute: executeDelete } = useAction(deleteAppointment, {
+    onSuccess: () => {
+      toast.success("Agendamento cancelado com sucesso");
+    },
+    onError: () => {
+      toast.error("Erro ao cancelar agendamento");
+    },
+  });
   return (
     <BaseTable
       data={appointments}
@@ -77,15 +86,22 @@ export function AppointmentsTable({
         },
       ]}
       actions={(appointment) => (
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            onAppointmentClick?.(appointment);
+        <BaseAlertDialog
+          title="Cancelar Agendamento"
+          description="Tem certeza que deseja cancelar este agendamento?"
+          trigger={
+            <BaseButton
+              variant="ghost"
+              type="button"
+              className="text-muted-foreground hover:text-foreground w-fit"
+            >
+              <Trash className="size-4" />
+            </BaseButton>
+          }
+          onConfirm={() => {
+            executeDelete(appointment.id);
           }}
-          className="text-muted-foreground hover:text-foreground"
-        >
-          <ArrowUpRight className="size-4" />
-        </button>
+        />
       )}
     />
   );

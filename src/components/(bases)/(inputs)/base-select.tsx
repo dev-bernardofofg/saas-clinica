@@ -18,7 +18,7 @@ import {
 import { motion } from "framer-motion";
 import type { Control, FieldValues, Path } from "react-hook-form";
 
-type Option = { label: string; value: string | number };
+type Option = { label: string; value: string | number; available?: boolean };
 type OptionGroup = { label: string; options: Option[] };
 
 export interface IBaseSelect<T extends FieldValues> {
@@ -91,6 +91,7 @@ export const BaseSelect = <T extends FieldValues>({
                         key={option.value}
                         value={String(option.value)}
                         className="truncate"
+                        disabled={option.available === false}
                       >
                         {option.label}
                       </SelectItem>
