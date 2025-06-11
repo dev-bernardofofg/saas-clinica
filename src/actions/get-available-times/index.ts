@@ -1,6 +1,8 @@
 "use server";
 
 import dayjs from "dayjs";
+import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
+import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
 import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
 import { eq } from "drizzle-orm";
@@ -15,6 +17,8 @@ import { actionClient } from "@/lib/next-safe-action";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
+dayjs.extend(isSameOrBefore);
+dayjs.extend(isSameOrAfter);
 
 export const getAvailableTimes = actionClient
   .schema(
@@ -40,9 +44,13 @@ export const getAvailableTimes = actionClient
       throw new Error("Médico não encontrado");
     }
     const selectedDayOfWeek = dayjs(parsedInput.date).day();
+    console.log("Selected day of week:", selectedDayOfWeek);
+    console.log("Doctor available from:", doctor.availableFromWeekDay);
+    console.log("Doctor available to:", doctor.availableToWeekDay);
     const doctorIsAvailable =
       selectedDayOfWeek >= doctor.availableFromWeekDay &&
       selectedDayOfWeek <= doctor.availableToWeekDay;
+    console.log("Doctor is available:", doctorIsAvailable);
     if (!doctorIsAvailable) {
       return [];
     }
@@ -57,31 +65,31 @@ export const getAvailableTimes = actionClient
     const timeSlots = generateTimeSlots();
 
     // Convert the time values to dayjs objects
+    const [fromHours, fromMinutes] = doctor.availableFromTime
+      .split(":")
+      .map(Number);
+    const [toHours, toMinutes] = doctor.availableToTime.split(":").map(Number);
+
     const doctorAvailableFrom = dayjs()
-      .utc()
-      .set("hour", dayjs(doctor.availableFromTime).hour())
-      .set("minute", dayjs(doctor.availableFromTime).minute())
-      .set("second", 0)
-      .local();
+      .set("hour", fromHours)
+      .set("minute", fromMinutes)
+      .set("second", 0);
 
     const doctorAvailableTo = dayjs()
-      .utc()
-      .set("hour", dayjs(doctor.availableToTime).hour())
-      .set("minute", dayjs(doctor.availableToTime).minute())
-      .set("second", 0)
-      .local();
+      .set("hour", toHours)
+      .set("minute", toMinutes)
+      .set("second", 0);
 
     const doctorTimeSlots = timeSlots.filter((time) => {
       const [hours, minutes] = time.split(":").map(Number);
-      const date = dayjs()
-        .utc()
+      const slotTime = dayjs()
         .set("hour", hours)
         .set("minute", minutes)
         .set("second", 0);
 
       return (
-        date.format("HH:mm:ss") >= doctorAvailableFrom.format("HH:mm:ss") &&
-        date.format("HH:mm:ss") <= doctorAvailableTo.format("HH:mm:ss")
+        slotTime.isSameOrAfter(doctorAvailableFrom) &&
+        slotTime.isSameOrBefore(doctorAvailableTo)
       );
     });
 

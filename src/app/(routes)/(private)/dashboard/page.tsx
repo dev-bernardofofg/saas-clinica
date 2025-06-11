@@ -4,6 +4,7 @@ import { BaseStats } from "@/components/(bases)/(stats)/base-stats";
 import { FilterDashboardMetricsForm } from "@/components/(forms)/filter-dashboard-metrics.form";
 import { Header } from "@/components/(layouts)/header";
 import { Fade } from "@/components/(motions)/fade";
+import { ChartConfig } from "@/components/ui/chart";
 import { db } from "@/db";
 import {
   appointmentsTable,
@@ -12,10 +13,15 @@ import {
   usersToClinicsTable,
 } from "@/db/schema";
 import { getCurrentUser } from "@/lib/session";
-import { revenueChartConfig, revenueChartData } from "@/mocks/chart-data.mock";
 import { filterDashboardMetricsDefaultValues } from "@/schemas/dashboard.schema";
-import { endOfDay, format, parseISO, startOfDay } from "date-fns";
-import { and, count, eq, gte, lt, sum } from "drizzle-orm";
+import {
+  endOfDay,
+  format,
+  isWithinInterval,
+  parseISO,
+  startOfDay,
+} from "date-fns";
+import { and, count, eq, gte, lt, sql, sum } from "drizzle-orm";
 import {
   CalendarIcon,
   DollarSignIcon,
@@ -46,12 +52,17 @@ const DashboardPage = async ({ searchParams }: DashboardPageProps) => {
     redirect("/clinic-form");
   }
 
-  const {
-    from = filterDashboardMetricsDefaultValues.from,
-    to = filterDashboardMetricsDefaultValues.to,
-  } = await searchParams;
-  const startDate = startOfDay(parseISO(from));
-  const endDate = endOfDay(parseISO(to));
+  const { from: rawFrom, to: rawTo } = await searchParams;
+
+  const fromDate = rawFrom
+    ? parseISO(rawFrom)
+    : parseISO(filterDashboardMetricsDefaultValues.from);
+  const toDate = rawTo
+    ? parseISO(rawTo)
+    : parseISO(filterDashboardMetricsDefaultValues.to);
+
+  const startDate = startOfDay(fromDate);
+  const endDate = endOfDay(toDate);
 
   const [
     totalRevenue,
@@ -68,8 +79,8 @@ const DashboardPage = async ({ searchParams }: DashboardPageProps) => {
       .where(
         and(
           eq(appointmentsTable.clinicId, session.clinic.id),
-          gte(appointmentsTable.date, startDate),
-          lt(appointmentsTable.date, endDate),
+          sql`DATE(${appointmentsTable.date}) >= DATE(${startDate})`,
+          sql`DATE(${appointmentsTable.date}) <= DATE(${endDate})`,
         ),
       ),
     db
@@ -80,8 +91,8 @@ const DashboardPage = async ({ searchParams }: DashboardPageProps) => {
       .where(
         and(
           eq(appointmentsTable.clinicId, session.clinic.id),
-          gte(appointmentsTable.date, startDate),
-          lt(appointmentsTable.date, endDate),
+          sql`DATE(${appointmentsTable.date}) >= DATE(${startDate})`,
+          sql`DATE(${appointmentsTable.date}) <= DATE(${endDate})`,
         ),
       ),
     db
@@ -108,6 +119,42 @@ const DashboardPage = async ({ searchParams }: DashboardPageProps) => {
     where: eq(doctorsTable.clinicId, session.clinic.id),
     limit: 4,
   });
+
+  const chartStartDate = new Date(
+    new Date().setDate(new Date().getDate() - 10),
+  );
+  const chartEndDate = new Date();
+
+  const dailyAppointmnetsData = await db
+    .select({
+      date: sql<string>`DATE(${appointmentsTable.date})`.as("date"),
+      appointments: count(appointmentsTable.id),
+      revenue:
+        sql<number>`COALESCE(SUM(${appointmentsTable.priceInCents}), 0)`.as(
+          "revenue",
+        ),
+    })
+    .from(appointmentsTable)
+    .where(
+      and(
+        eq(appointmentsTable.clinicId, session.clinic.id),
+        gte(appointmentsTable.date, chartStartDate),
+        lt(appointmentsTable.date, chartEndDate),
+      ),
+    )
+    .groupBy(sql`DATE(${appointmentsTable.date})`)
+    .orderBy(sql`DATE(${appointmentsTable.date})`);
+
+  const revenueChartConfig = {
+    appointments: {
+      label: "Agendamentos",
+      color: "var(--success)",
+    },
+    revenue: {
+      label: "Faturamento",
+      color: "var(--destructive)",
+    },
+  } satisfies ChartConfig;
 
   return (
     <Fade>
@@ -148,9 +195,15 @@ const DashboardPage = async ({ searchParams }: DashboardPageProps) => {
         <BaseAreaChart
           title="Faturamento"
           description="Faturamento mensal"
-          data={revenueChartData}
+          data={dailyAppointmnetsData.filter((item) => {
+            const date = parseISO(item.date);
+            return isWithinInterval(date, {
+              start: chartStartDate,
+              end: chartEndDate,
+            });
+          })}
           config={revenueChartConfig}
-          xAxisKey="month"
+          xAxisKey="date"
           trendingValue={Number(totalRevenue[0].total)}
           dateRange={`${format(startDate, "MMMM yyyy")} - ${format(endDate, "MMMM yyyy")}`}
           className="col-span-3"

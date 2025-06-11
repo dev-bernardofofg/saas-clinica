@@ -142,7 +142,6 @@ export const CreateAppointmentForm = ({
             value: patient.id,
           }))}
         />
-
         <BaseSelect
           control={form.control}
           name="doctorId"
@@ -153,14 +152,12 @@ export const CreateAppointmentForm = ({
             value: doctor.id,
           }))}
         />
-
         <BaseCurrencyInput
           control={form.control}
           name="priceInCents"
           label="Valor da consulta"
           placeholder="R$ 0,00"
         />
-
         <BaseDatePicker
           control={form.control}
           name="date"
@@ -169,7 +166,6 @@ export const CreateAppointmentForm = ({
           isDateAvaliable={isDateAvailable}
           isDateDisabled={isDateTimeEnabled}
         />
-
         <BaseSelect
           control={form.control}
           name="time"
@@ -179,7 +175,6 @@ export const CreateAppointmentForm = ({
           selectDate={!selectedDate}
           options={availableTimes?.data}
         />
-
         <div className="col-span-2">
           <BaseTextarea
             control={form.control}
@@ -188,7 +183,6 @@ export const CreateAppointmentForm = ({
             placeholder="Adicione observações sobre a consulta"
           />
         </div>
-
         <div className="col-span-2">
           <BaseButton
             type="submit"

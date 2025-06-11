@@ -1,4 +1,4 @@
-import { endOfDay, format, startOfDay, subMonths } from "date-fns";
+import { format, subMonths } from "date-fns";
 import { z } from "zod";
 
 const today = new Date();
@@ -10,8 +10,8 @@ export const filterDashboardMetricsSchema = z.object({
 });
 
 export const filterDashboardMetricsDefaultValues = {
-  from: format(startOfDay(oneMonthFromToday), "yyyy-MM-dd"),
-  to: format(endOfDay(today), "yyyy-MM-dd"),
+  from: format(oneMonthFromToday, "yyyy-MM-dd"),
+  to: format(today, "yyyy-MM-dd"),
 };
 
 export type FilterDashboardMetricsSchema = z.infer<

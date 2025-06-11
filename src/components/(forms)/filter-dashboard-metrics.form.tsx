@@ -7,7 +7,7 @@ import {
   filterDashboardMetricsDefaultValues,
   FilterDashboardMetricsSchema,
 } from "@/schemas/dashboard.schema";
-import { parseISO, subMonths } from "date-fns";
+import { parseISO } from "date-fns";
 import { parseAsIsoDate, useQueryState } from "nuqs";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
@@ -19,7 +19,7 @@ export const FilterDashboardMetricsForm = () => {
 
   const [from, setFrom] = useQueryState(
     "from",
-    parseAsIsoDate.withDefault(subMonths(new Date(), 1)),
+    parseAsIsoDate.withDefault(new Date()),
   );
 
   const [to, setTo] = useQueryState(
@@ -28,6 +28,8 @@ export const FilterDashboardMetricsForm = () => {
   );
 
   const handleFilterMetrics = (data: FilterDashboardMetricsSchema) => {
+    console.log(data);
+
     if (data?.from) {
       setFrom(parseISO(data.from), {
         shallow: false,
