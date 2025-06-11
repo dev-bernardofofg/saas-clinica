@@ -48,10 +48,7 @@ export const ListDoctor = ({
 }) => {
   return (
     <Card
-      className={cn(
-        "border-border flex w-full flex-col gap-3 space-y-3 rounded-lg border bg-white shadow-xs",
-        className,
-      )}
+      className={cn("flex w-full flex-col gap-3 space-y-3 bg-white", className)}
     >
       <CardHeader className="flex items-center justify-between gap-3">
         <div className="flex flex-col gap-1">

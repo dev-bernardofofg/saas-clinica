@@ -1,4 +1,5 @@
 import { ListDoctor } from "@/components/(bases)/(list)/list-doctor";
+import TopSpecialities from "@/components/(bases)/(list)/top-speciality";
 import { BaseStats } from "@/components/(bases)/(stats)/base-stats";
 import AppointmentsChart from "@/components/(charts)/appointments-chart";
 import { FilterDashboardMetricsForm } from "@/components/(forms)/filter-dashboard-metrics.form";
@@ -64,6 +65,7 @@ const DashboardPage = async ({ searchParams }: DashboardPageProps) => {
     [totalDoctors],
     doctors,
     dailyAppointmentsData,
+    topSpecialities,
   ] = await Promise.all([
     db
       .select({
@@ -147,6 +149,23 @@ const DashboardPage = async ({ searchParams }: DashboardPageProps) => {
       )
       .groupBy(sql`DATE(${appointmentsTable.date})`)
       .orderBy(sql`DATE(${appointmentsTable.date})`),
+
+    db
+      .select({
+        speciality: doctorsTable.speciality,
+        appointments: count(appointmentsTable.id),
+      })
+      .from(appointmentsTable)
+      .innerJoin(doctorsTable, eq(appointmentsTable.doctorId, doctorsTable.id))
+      .where(
+        and(
+          eq(appointmentsTable.clinicId, session.clinic.id),
+          sql`DATE(${appointmentsTable.date}) >= DATE(${startDate})`,
+          sql`DATE(${appointmentsTable.date}) <= DATE(${endDate})`,
+        ),
+      )
+      .groupBy(doctorsTable.speciality)
+      .orderBy(desc(count(appointmentsTable.id))),
   ]);
 
   return (
@@ -184,11 +203,18 @@ const DashboardPage = async ({ searchParams }: DashboardPageProps) => {
         />
       </div>
 
-      <div className="grid max-h-64 grid-cols-4 gap-4">
+      <div className="grid grid-cols-4 gap-4">
         <div className="col-span-3">
           <AppointmentsChart dailyAppointmentsData={dailyAppointmentsData} />
         </div>
         <ListDoctor className="col-span-1" doctors={doctors} />
+      </div>
+
+      <div className="grid grid-cols-4 gap-4">
+        <TopSpecialities
+          className="col-span-1"
+          specialitiesData={topSpecialities}
+        />
       </div>
     </Fade>
   );
