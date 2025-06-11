@@ -84,7 +84,7 @@ export default function TopSpecialities({
           href="/doctors"
           className="text-muted-foreground text-sm hover:underline"
         >
-          Ver todo
+          Ver tudo
         </Link>
       </CardHeader>
 
