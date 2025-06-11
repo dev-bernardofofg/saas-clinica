@@ -20,6 +20,10 @@ export async function getCurrentUser() {
     throw new Error("Unauthorized");
   }
 
+  if (!session.user.clinic) {
+    throw new Error("Clinic not found");
+  }
+
   return session.user as SessionUser;
 }
 
