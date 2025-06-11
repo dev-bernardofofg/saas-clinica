@@ -20,7 +20,7 @@ export const getAvailableTimes = actionClient
   .schema(
     z.object({
       doctorId: z.string(),
-      date: z.string().date(), // YYYY-MM-DD,
+      date: z.string().date(),
     }),
   )
   .action(async ({ parsedInput }) => {
@@ -56,23 +56,27 @@ export const getAvailableTimes = actionClient
       .map((appointment) => dayjs(appointment.date).format("HH:mm:ss"));
     const timeSlots = generateTimeSlots();
 
+    // Convert the time values to dayjs objects
     const doctorAvailableFrom = dayjs()
       .utc()
-      .set("hour", Number(doctor.availableFromTime.split(":")[0]))
-      .set("minute", Number(doctor.availableFromTime.split(":")[1]))
+      .set("hour", dayjs(doctor.availableFromTime).hour())
+      .set("minute", dayjs(doctor.availableFromTime).minute())
       .set("second", 0)
       .local();
+
     const doctorAvailableTo = dayjs()
       .utc()
-      .set("hour", Number(doctor.availableToTime.split(":")[0]))
-      .set("minute", Number(doctor.availableToTime.split(":")[1]))
+      .set("hour", dayjs(doctor.availableToTime).hour())
+      .set("minute", dayjs(doctor.availableToTime).minute())
       .set("second", 0)
       .local();
+
     const doctorTimeSlots = timeSlots.filter((time) => {
+      const [hours, minutes] = time.split(":").map(Number);
       const date = dayjs()
         .utc()
-        .set("hour", Number(time.split(":")[0]))
-        .set("minute", Number(time.split(":")[1]))
+        .set("hour", hours)
+        .set("minute", minutes)
         .set("second", 0);
 
       return (
@@ -80,6 +84,7 @@ export const getAvailableTimes = actionClient
         date.format("HH:mm:ss") <= doctorAvailableTo.format("HH:mm:ss")
       );
     });
+
     return doctorTimeSlots.map((time) => {
       return {
         value: time,

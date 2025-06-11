@@ -8,17 +8,15 @@ import {
 } from "@/components/ui/dialog";
 import { db } from "@/db";
 import { usersToClinicsTable } from "@/db/schema";
-import { auth } from "@/lib/auth";
+import { getCurrentUser } from "@/lib/session";
 import { eq } from "drizzle-orm";
-import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
 const ClinicFormPage = async () => {
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
+  const session = await getCurrentUser();
+
   const clinics = await db.query.usersToClinicsTable.findMany({
-    where: eq(usersToClinicsTable.userId, session?.user?.id!),
+    where: eq(usersToClinicsTable.userId, session?.id!),
   });
 
   if (clinics.length > 0) {
