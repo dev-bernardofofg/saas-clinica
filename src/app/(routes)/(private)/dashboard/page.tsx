@@ -14,7 +14,7 @@ import {
 import { getCurrentUser } from "@/lib/session";
 import { filterDashboardMetricsDefaultValues } from "@/schemas/dashboard.schema";
 import { endOfDay, parseISO, startOfDay } from "date-fns";
-import { and, count, eq, sql, sum } from "drizzle-orm";
+import { and, count, desc, eq, sql, sum } from "drizzle-orm";
 import {
   CalendarIcon,
   DollarSignIcon,
@@ -57,81 +57,97 @@ const DashboardPage = async ({ searchParams }: DashboardPageProps) => {
   const startDate = startOfDay(fromDate);
   const endDate = endOfDay(toDate);
 
-  const [totalRevenue, totalAppointments, totalPatients, totalDoctors] =
-    await Promise.all([
-      db
-        .select({
-          total: sum(appointmentsTable.priceInCents),
-        })
-        .from(appointmentsTable)
-        .where(
-          and(
-            eq(appointmentsTable.clinicId, session.clinic.id),
-            sql`DATE(${appointmentsTable.date}) >= DATE(${startDate})`,
-            sql`DATE(${appointmentsTable.date}) <= DATE(${endDate})`,
-          ),
+  const [
+    [totalRevenue],
+    [totalAppointments],
+    [totalPatients],
+    [totalDoctors],
+    doctors,
+    dailyAppointmentsData,
+  ] = await Promise.all([
+    db
+      .select({
+        total: sum(appointmentsTable.priceInCents),
+      })
+      .from(appointmentsTable)
+      .where(
+        and(
+          eq(appointmentsTable.clinicId, session.clinic.id),
+          sql`DATE(${appointmentsTable.date}) >= DATE(${startDate})`,
+          sql`DATE(${appointmentsTable.date}) <= DATE(${endDate})`,
         ),
-      db
-        .select({
-          total: count(appointmentsTable.priceInCents),
-        })
-        .from(appointmentsTable)
-        .where(
-          and(
-            eq(appointmentsTable.clinicId, session.clinic.id),
-            sql`DATE(${appointmentsTable.date}) >= DATE(${startDate})`,
-            sql`DATE(${appointmentsTable.date}) <= DATE(${endDate})`,
-          ),
-        ),
-      db
-        .select({
-          total: count(patientsTable.id),
-        })
-        .from(patientsTable)
-        .where(eq(patientsTable.clinicId, session.clinic.id)),
-      db
-        .select({
-          total: count(doctorsTable.id),
-        })
-        .from(doctorsTable)
-        .where(eq(doctorsTable.clinicId, session.clinic.id)),
-      db
-        .select({
-          total: sum(appointmentsTable.priceInCents),
-        })
-        .from(appointmentsTable)
-        .where(eq(appointmentsTable.clinicId, session.clinic.id)),
-    ]);
-
-  const doctors = await db.query.doctorsTable.findMany({
-    where: eq(doctorsTable.clinicId, session.clinic.id),
-    limit: 4,
-  });
-
-  const chartStartDate = new Date(
-    new Date().setDate(new Date().getDate() - 10),
-  );
-  const chartEndDate = new Date();
-
-  const dailyAppointmentsData = await db
-    .select({
-      date: sql<string>`DATE(${appointmentsTable.date})`.as("date"),
-      appointments: count(appointmentsTable.id),
-      revenue:
-        sql<number>`COALESCE(SUM(${appointmentsTable.priceInCents}), 0)`.as(
-          "revenue",
-        ),
-    })
-    .from(appointmentsTable)
-    .where(
-      and(
-        eq(appointmentsTable.clinicId, session.clinic.id),
-        sql`DATE(${appointmentsTable.date}) >= DATE(${startDate})`,
-        sql`DATE(${appointmentsTable.date}) <= DATE(${endDate})`,
       ),
-    )
-    .groupBy(sql`DATE(${appointmentsTable.date})`)
-    .orderBy(sql`DATE(${appointmentsTable.date})`);
+    db
+      .select({
+        total: count(appointmentsTable.priceInCents),
+      })
+      .from(appointmentsTable)
+      .where(
+        and(
+          eq(appointmentsTable.clinicId, session.clinic.id),
+          sql`DATE(${appointmentsTable.date}) >= DATE(${startDate})`,
+          sql`DATE(${appointmentsTable.date}) <= DATE(${endDate})`,
+        ),
+      ),
+    db
+      .select({
+        total: count(patientsTable.id),
+      })
+      .from(patientsTable)
+      .where(eq(patientsTable.clinicId, session.clinic.id)),
+    db
+      .select({
+        total: count(doctorsTable.id),
+      })
+      .from(doctorsTable)
+      .where(eq(doctorsTable.clinicId, session.clinic.id)),
+    db
+      .select({
+        id: doctorsTable.id,
+        name: doctorsTable.name,
+        avatarImageUrl: doctorsTable.avatarImageUrl,
+        speciality: doctorsTable.speciality,
+        appointments: count(appointmentsTable.id),
+      })
+      .from(doctorsTable)
+      .leftJoin(
+        appointmentsTable,
+        and(
+          eq(appointmentsTable.doctorId, doctorsTable.id),
+          eq(appointmentsTable.clinicId, session.clinic.id),
+          sql`DATE(${appointmentsTable.date}) >= DATE(${startDate})`,
+          sql`DATE(${appointmentsTable.date}) <= DATE(${endDate})`,
+        ),
+      )
+      .where(eq(doctorsTable.clinicId, session.clinic.id))
+      .groupBy(
+        doctorsTable.id,
+        doctorsTable.name,
+        doctorsTable.avatarImageUrl,
+        doctorsTable.speciality,
+      )
+      .orderBy(desc(count(appointmentsTable.id)))
+      .limit(4),
+    db
+      .select({
+        date: sql<string>`DATE(${appointmentsTable.date})`.as("date"),
+        appointments: count(appointmentsTable.id),
+        revenue:
+          sql<number>`COALESCE(SUM(${appointmentsTable.priceInCents}), 0)`.as(
+            "revenue",
+          ),
+      })
+      .from(appointmentsTable)
+      .where(
+        and(
+          eq(appointmentsTable.clinicId, session.clinic.id),
+          sql`DATE(${appointmentsTable.date}) >= DATE(${startDate})`,
+          sql`DATE(${appointmentsTable.date}) <= DATE(${endDate})`,
+        ),
+      )
+      .groupBy(sql`DATE(${appointmentsTable.date})`)
+      .orderBy(sql`DATE(${appointmentsTable.date})`),
+  ]);
 
   return (
     <Fade>
@@ -145,25 +161,25 @@ const DashboardPage = async ({ searchParams }: DashboardPageProps) => {
         <BaseStats
           title="Faturamento"
           Icon={DollarSignIcon}
-          value={Number(totalRevenue[0].total)}
+          value={Number(totalRevenue.total)}
           type="currency"
         />
         <BaseStats
           title="Agendamentos"
           Icon={CalendarIcon}
-          value={totalAppointments[0].total}
+          value={totalAppointments.total}
           type="number"
         />
         <BaseStats
           title="Pacientes"
           Icon={UserIcon}
-          value={totalPatients[0].total}
+          value={totalPatients.total}
           type="number"
         />
         <BaseStats
           title="Médicos"
           Icon={StethoscopeIcon}
-          value={totalDoctors[0].total}
+          value={totalDoctors.total}
           type="number"
         />
       </div>

@@ -1,17 +1,22 @@
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { doctorsTable } from "@/db/schema";
 import { getInitialsName } from "@/helpers/string";
 import { cn } from "@/lib/utils";
 import { Stethoscope } from "lucide-react";
 import Link from "next/link";
 
-const ListItemDoctor = ({
-  doctor,
-}: {
-  doctor: typeof doctorsTable.$inferSelect;
-}) => {
+interface ListDoctorsProps {
+  doctors: {
+    id: string;
+    name: string;
+    avatarImageUrl: string | null;
+    speciality: string;
+    appointments: number;
+  }[];
+}
+
+const ListItemDoctor = (doctor: ListDoctorsProps["doctors"][number]) => {
   return (
     <div className="grid grid-cols-3 items-center justify-between gap-3">
       <div className="col-span-2 flex items-center gap-2">
@@ -26,7 +31,9 @@ const ListItemDoctor = ({
       </div>
 
       <div className="col-span-1 flex items-center justify-end">
-        <span className="text-muted-foreground text-sm">10 agend.</span>
+        <span className="text-muted-foreground text-sm">
+          {doctor.appointments} agend.
+        </span>
       </div>
     </div>
   );
@@ -36,7 +43,7 @@ export const ListDoctor = ({
   doctors,
   className,
 }: {
-  doctors: (typeof doctorsTable.$inferSelect)[];
+  doctors: ListDoctorsProps["doctors"];
   className?: string;
 }) => {
   return (
@@ -71,7 +78,7 @@ export const ListDoctor = ({
 
       <CardContent className="flex flex-col gap-2">
         {doctors.map((doctor) => (
-          <ListItemDoctor key={doctor.id} doctor={doctor} />
+          <ListItemDoctor key={doctor.id} {...doctor} />
         ))}
         {doctors.length === 0 && (
           <div className="flex items-center justify-center">
