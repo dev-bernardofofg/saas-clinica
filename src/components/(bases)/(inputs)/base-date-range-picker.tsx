@@ -205,7 +205,7 @@ export function BaseDateRangePicker<T extends FieldValues>({
                 setDate(range);
                 if (range?.from) {
                   const fromDate = new Date(range.from);
-                  fromDate.setUTCHours(0, 0, 0, 0);
+                  fromDate.setUTCHours(3, 0, 0, 0);
                   methods.setValue(
                     fromFieldName,
                     format(fromDate, "yyyy-MM-dd") as any,
@@ -215,7 +215,7 @@ export function BaseDateRangePicker<T extends FieldValues>({
                 }
                 if (range?.to) {
                   const toDate = new Date(range.to);
-                  toDate.setUTCHours(0, 0, 0, 0);
+                  toDate.setUTCHours(3, 0, 0, 0);
                   methods.setValue(
                     toFieldName,
                     format(toDate, "yyyy-MM-dd") as any,

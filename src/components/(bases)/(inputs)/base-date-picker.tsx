@@ -23,7 +23,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
-import { format, parseISO } from "date-fns";
+import { format, parseISO, startOfDay } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { motion } from "framer-motion";
 import { CalendarIcon, ChevronLeft, ChevronRight } from "lucide-react";
@@ -197,7 +197,8 @@ export function BaseDatePicker<T extends FieldValues>({
                   }}
                   disabled={(date) => {
                     if (disableFutureDates && date > new Date()) return true;
-                    if (disablePastDates && date < new Date()) return true;
+                    if (disablePastDates && date < startOfDay(new Date()))
+                      return true;
                     if (minDate && date < minDate) return true;
                     if (maxDate && date > maxDate) return true;
                     if (isDateAvaliable && !isDateAvaliable(date)) return true;

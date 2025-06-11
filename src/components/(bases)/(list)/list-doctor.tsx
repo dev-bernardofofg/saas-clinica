@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { doctorsTable } from "@/db/schema";
 import { getInitialsName } from "@/helpers/string";
+import { cn } from "@/lib/utils";
 import { Stethoscope } from "lucide-react";
 import Link from "next/link";
 
@@ -33,11 +34,18 @@ const ListItemDoctor = ({
 
 export const ListDoctor = ({
   doctors,
+  className,
 }: {
   doctors: (typeof doctorsTable.$inferSelect)[];
+  className?: string;
 }) => {
   return (
-    <Card className="border-border flex w-full flex-col gap-3 space-y-3 rounded-lg border bg-white shadow-xs">
+    <Card
+      className={cn(
+        "border-border flex w-full flex-col gap-3 space-y-3 rounded-lg border bg-white shadow-xs",
+        className,
+      )}
+    >
       <CardHeader className="flex items-center justify-between gap-3">
         <div className="flex flex-col gap-1">
           <div className="flex items-center gap-3">

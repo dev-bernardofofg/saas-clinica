@@ -1,10 +1,9 @@
-import { BaseAreaChart } from "@/components/(bases)/(charts)/base-area-chart";
 import { ListDoctor } from "@/components/(bases)/(list)/list-doctor";
 import { BaseStats } from "@/components/(bases)/(stats)/base-stats";
+import AppointmentsChart from "@/components/(charts)/appointments-chart";
 import { FilterDashboardMetricsForm } from "@/components/(forms)/filter-dashboard-metrics.form";
 import { Header } from "@/components/(layouts)/header";
 import { Fade } from "@/components/(motions)/fade";
-import { ChartConfig } from "@/components/ui/chart";
 import { db } from "@/db";
 import {
   appointmentsTable,
@@ -14,13 +13,7 @@ import {
 } from "@/db/schema";
 import { getCurrentUser } from "@/lib/session";
 import { filterDashboardMetricsDefaultValues } from "@/schemas/dashboard.schema";
-import {
-  endOfDay,
-  format,
-  isWithinInterval,
-  parseISO,
-  startOfDay,
-} from "date-fns";
+import { endOfDay, parseISO, startOfDay } from "date-fns";
 import { and, count, eq, gte, lt, sql, sum } from "drizzle-orm";
 import {
   CalendarIcon,
@@ -125,7 +118,7 @@ const DashboardPage = async ({ searchParams }: DashboardPageProps) => {
   );
   const chartEndDate = new Date();
 
-  const dailyAppointmnetsData = await db
+  const dailyAppointmentsData = await db
     .select({
       date: sql<string>`DATE(${appointmentsTable.date})`.as("date"),
       appointments: count(appointmentsTable.id),
@@ -144,17 +137,6 @@ const DashboardPage = async ({ searchParams }: DashboardPageProps) => {
     )
     .groupBy(sql`DATE(${appointmentsTable.date})`)
     .orderBy(sql`DATE(${appointmentsTable.date})`);
-
-  const revenueChartConfig = {
-    appointments: {
-      label: "Agendamentos",
-      color: "var(--success)",
-    },
-    revenue: {
-      label: "Faturamento",
-      color: "var(--destructive)",
-    },
-  } satisfies ChartConfig;
 
   return (
     <Fade>
@@ -191,24 +173,11 @@ const DashboardPage = async ({ searchParams }: DashboardPageProps) => {
         />
       </div>
 
-      <div className="grid grid-cols-4 gap-4">
-        <BaseAreaChart
-          title="Faturamento"
-          description="Faturamento mensal"
-          data={dailyAppointmnetsData.filter((item) => {
-            const date = parseISO(item.date);
-            return isWithinInterval(date, {
-              start: chartStartDate,
-              end: chartEndDate,
-            });
-          })}
-          config={revenueChartConfig}
-          xAxisKey="date"
-          trendingValue={Number(totalRevenue[0].total)}
-          dateRange={`${format(startDate, "MMMM yyyy")} - ${format(endDate, "MMMM yyyy")}`}
-          className="col-span-3"
-        />
-        <ListDoctor doctors={doctors} />
+      <div className="grid max-h-64 grid-cols-4 gap-4">
+        <div className="col-span-3">
+          <AppointmentsChart dailyAppointmentsData={dailyAppointmentsData} />
+        </div>
+        <ListDoctor className="col-span-1" doctors={doctors} />
       </div>
     </Fade>
   );

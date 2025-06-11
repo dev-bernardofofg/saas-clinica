@@ -31,6 +31,7 @@ export const getAvailableTimes = actionClient
     const session = await auth.api.getSession({
       headers: await headers(),
     });
+
     if (!session) {
       throw new Error("Unauthorized");
     }
@@ -93,10 +94,24 @@ export const getAvailableTimes = actionClient
       );
     });
 
+    const now = dayjs();
+    const selectedDate = dayjs(parsedInput.date);
+    const isToday = selectedDate.isSame(now, "day");
+
     return doctorTimeSlots.map((time) => {
+      const [hours, minutes] = time.split(":").map(Number);
+      const slotTime = dayjs(parsedInput.date)
+        .set("hour", hours)
+        .set("minute", minutes)
+        .set("second", 0);
+
+      // Se for hoje, verifica se o horário já passou
+      const hasPassedForToday = isToday && slotTime.isBefore(now);
+
       return {
         value: time,
-        available: !appointmentsOnSelectedDate.includes(time),
+        available:
+          !appointmentsOnSelectedDate.includes(time) && !hasPassedForToday,
         label: time.substring(0, 5),
       };
     });
