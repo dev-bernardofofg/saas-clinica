@@ -1,3 +1,5 @@
+import { BaseAreaChart } from "@/components/(bases)/(charts)/base-area-chart";
+import { ListDoctor } from "@/components/(bases)/(list)/list-doctor";
 import { BaseStats } from "@/components/(bases)/(stats)/base-stats";
 import { FilterDashboardMetricsForm } from "@/components/(forms)/filter-dashboard-metrics.form";
 import { Header } from "@/components/(layouts)/header";
@@ -10,8 +12,9 @@ import {
   usersToClinicsTable,
 } from "@/db/schema";
 import { getCurrentUser } from "@/lib/session";
+import { revenueChartConfig, revenueChartData } from "@/mocks/chart-data.mock";
 import { filterDashboardMetricsDefaultValues } from "@/schemas/dashboard.schema";
-import { endOfDay, parseISO, startOfDay } from "date-fns";
+import { endOfDay, format, parseISO, startOfDay } from "date-fns";
 import { and, count, eq, gte, lt, sum } from "drizzle-orm";
 import {
   CalendarIcon,
@@ -101,6 +104,11 @@ const DashboardPage = async ({ searchParams }: DashboardPageProps) => {
       .where(eq(appointmentsTable.clinicId, session.clinic.id)),
   ]);
 
+  const doctors = await db.query.doctorsTable.findMany({
+    where: eq(doctorsTable.clinicId, session.clinic.id),
+    limit: 4,
+  });
+
   return (
     <Fade>
       <Header
@@ -134,6 +142,20 @@ const DashboardPage = async ({ searchParams }: DashboardPageProps) => {
           value={totalDoctors[0].total}
           type="number"
         />
+      </div>
+
+      <div className="grid grid-cols-4 gap-4">
+        <BaseAreaChart
+          title="Faturamento"
+          description="Faturamento mensal"
+          data={revenueChartData}
+          config={revenueChartConfig}
+          xAxisKey="month"
+          trendingValue={Number(totalRevenue[0].total)}
+          dateRange={`${format(startDate, "MMMM yyyy")} - ${format(endDate, "MMMM yyyy")}`}
+          className="col-span-3"
+        />
+        <ListDoctor doctors={doctors} />
       </div>
     </Fade>
   );

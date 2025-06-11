@@ -51,6 +51,7 @@ export const Fade = ({
         delay: delay,
         ease: "easeOut",
       }}
+      className="w-full space-y-4"
     >
       {children}
     </motion.div>
