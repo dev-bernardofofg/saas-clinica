@@ -9,6 +9,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
+import { Table2Icon } from "lucide-react";
+import Link from "next/link";
 
 interface Column<T> {
   header: string;
@@ -22,6 +24,7 @@ interface BaseTableProps<T> {
   columns: Column<T>[];
   actions?: (item: T) => React.ReactNode;
   onRowClick?: (item: T) => void;
+  title?: string;
 }
 
 export function BaseTable<T>({
@@ -29,9 +32,24 @@ export function BaseTable<T>({
   columns,
   actions,
   onRowClick,
+  title,
 }: BaseTableProps<T>) {
   return (
     <div className="border-border rounded-md border bg-white px-6 py-5 shadow">
+      {title && (
+        <div className="mb-4 flex items-center justify-between gap-2">
+          <div className="flex items-center gap-2">
+            <Table2Icon className="size-5" />
+            <h1 className="text-lg font-medium">{title}</h1>
+          </div>
+          <Link
+            href="/appointments"
+            className="text-muted-foreground text-sm hover:underline"
+          >
+            Ver todos
+          </Link>
+        </div>
+      )}
       <Table>
         <TableHeader className="bg-blue-50">
           <TableRow>

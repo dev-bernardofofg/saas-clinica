@@ -20,9 +20,13 @@ type Appointment = typeof appointmentsTable.$inferSelect & {
 
 interface AppointmentsTableProps {
   appointments: Appointment[];
+  title?: string;
 }
 
-export function AppointmentsTable({ appointments }: AppointmentsTableProps) {
+export function AppointmentsTable({
+  appointments,
+  title,
+}: AppointmentsTableProps) {
   const { execute: executeDelete } = useAction(deleteAppointment, {
     onSuccess: () => {
       toast.success("Agendamento cancelado com sucesso");
@@ -33,6 +37,7 @@ export function AppointmentsTable({ appointments }: AppointmentsTableProps) {
   });
   return (
     <BaseTable
+      title={title}
       data={appointments}
       columns={[
         {

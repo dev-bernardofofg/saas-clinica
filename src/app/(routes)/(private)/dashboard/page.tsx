@@ -1,6 +1,7 @@
 import { ListDoctor } from "@/components/(bases)/(list)/list-doctor";
 import TopSpecialities from "@/components/(bases)/(list)/top-speciality";
 import { BaseStats } from "@/components/(bases)/(stats)/base-stats";
+import { AppointmentsTable } from "@/components/(bases)/(tables)/appointments-table";
 import AppointmentsChart from "@/components/(charts)/appointments-chart";
 import { FilterDashboardMetricsForm } from "@/components/(forms)/filter-dashboard-metrics.form";
 import { Header } from "@/components/(layouts)/header";
@@ -66,6 +67,7 @@ const DashboardPage = async ({ searchParams }: DashboardPageProps) => {
     doctors,
     dailyAppointmentsData,
     topSpecialities,
+    appointments,
   ] = await Promise.all([
     db
       .select({
@@ -166,6 +168,19 @@ const DashboardPage = async ({ searchParams }: DashboardPageProps) => {
       )
       .groupBy(doctorsTable.speciality)
       .orderBy(desc(count(appointmentsTable.id))),
+
+    db.query.appointmentsTable.findMany({
+      where: and(
+        eq(appointmentsTable.clinicId, session.clinic.id),
+        sql`DATE(${appointmentsTable.date}) >= DATE(${startDate})`,
+        sql`DATE(${appointmentsTable.date}) <= DATE(${endDate})`,
+      ),
+      with: {
+        patient: true,
+        doctor: true,
+      },
+      limit: 5,
+    }),
   ]);
 
   return (
@@ -211,6 +226,12 @@ const DashboardPage = async ({ searchParams }: DashboardPageProps) => {
       </div>
 
       <div className="grid grid-cols-4 gap-4">
+        <div className="col-span-3">
+          <AppointmentsTable
+            appointments={appointments}
+            title="Últimos agendamentos"
+          />
+        </div>
         <TopSpecialities
           className="col-span-1"
           specialitiesData={topSpecialities}
