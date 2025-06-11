@@ -14,7 +14,7 @@ import {
 import { getCurrentUser } from "@/lib/session";
 import { filterDashboardMetricsDefaultValues } from "@/schemas/dashboard.schema";
 import { endOfDay, parseISO, startOfDay } from "date-fns";
-import { and, count, eq, gte, lt, sql, sum } from "drizzle-orm";
+import { and, count, eq, sql, sum } from "drizzle-orm";
 import {
   CalendarIcon,
   DollarSignIcon,
@@ -57,56 +57,51 @@ const DashboardPage = async ({ searchParams }: DashboardPageProps) => {
   const startDate = startOfDay(fromDate);
   const endDate = endOfDay(toDate);
 
-  const [
-    totalRevenue,
-    totalAppointments,
-    totalPatients,
-    totalDoctors,
-    totalRevenueInCents,
-  ] = await Promise.all([
-    db
-      .select({
-        total: sum(appointmentsTable.priceInCents),
-      })
-      .from(appointmentsTable)
-      .where(
-        and(
-          eq(appointmentsTable.clinicId, session.clinic.id),
-          sql`DATE(${appointmentsTable.date}) >= DATE(${startDate})`,
-          sql`DATE(${appointmentsTable.date}) <= DATE(${endDate})`,
+  const [totalRevenue, totalAppointments, totalPatients, totalDoctors] =
+    await Promise.all([
+      db
+        .select({
+          total: sum(appointmentsTable.priceInCents),
+        })
+        .from(appointmentsTable)
+        .where(
+          and(
+            eq(appointmentsTable.clinicId, session.clinic.id),
+            sql`DATE(${appointmentsTable.date}) >= DATE(${startDate})`,
+            sql`DATE(${appointmentsTable.date}) <= DATE(${endDate})`,
+          ),
         ),
-      ),
-    db
-      .select({
-        total: count(appointmentsTable.priceInCents),
-      })
-      .from(appointmentsTable)
-      .where(
-        and(
-          eq(appointmentsTable.clinicId, session.clinic.id),
-          sql`DATE(${appointmentsTable.date}) >= DATE(${startDate})`,
-          sql`DATE(${appointmentsTable.date}) <= DATE(${endDate})`,
+      db
+        .select({
+          total: count(appointmentsTable.priceInCents),
+        })
+        .from(appointmentsTable)
+        .where(
+          and(
+            eq(appointmentsTable.clinicId, session.clinic.id),
+            sql`DATE(${appointmentsTable.date}) >= DATE(${startDate})`,
+            sql`DATE(${appointmentsTable.date}) <= DATE(${endDate})`,
+          ),
         ),
-      ),
-    db
-      .select({
-        total: count(patientsTable.id),
-      })
-      .from(patientsTable)
-      .where(eq(patientsTable.clinicId, session.clinic.id)),
-    db
-      .select({
-        total: count(doctorsTable.id),
-      })
-      .from(doctorsTable)
-      .where(eq(doctorsTable.clinicId, session.clinic.id)),
-    db
-      .select({
-        total: sum(appointmentsTable.priceInCents),
-      })
-      .from(appointmentsTable)
-      .where(eq(appointmentsTable.clinicId, session.clinic.id)),
-  ]);
+      db
+        .select({
+          total: count(patientsTable.id),
+        })
+        .from(patientsTable)
+        .where(eq(patientsTable.clinicId, session.clinic.id)),
+      db
+        .select({
+          total: count(doctorsTable.id),
+        })
+        .from(doctorsTable)
+        .where(eq(doctorsTable.clinicId, session.clinic.id)),
+      db
+        .select({
+          total: sum(appointmentsTable.priceInCents),
+        })
+        .from(appointmentsTable)
+        .where(eq(appointmentsTable.clinicId, session.clinic.id)),
+    ]);
 
   const doctors = await db.query.doctorsTable.findMany({
     where: eq(doctorsTable.clinicId, session.clinic.id),
@@ -131,8 +126,8 @@ const DashboardPage = async ({ searchParams }: DashboardPageProps) => {
     .where(
       and(
         eq(appointmentsTable.clinicId, session.clinic.id),
-        gte(appointmentsTable.date, chartStartDate),
-        lt(appointmentsTable.date, chartEndDate),
+        sql`DATE(${appointmentsTable.date}) >= DATE(${startDate})`,
+        sql`DATE(${appointmentsTable.date}) <= DATE(${endDate})`,
       ),
     )
     .groupBy(sql`DATE(${appointmentsTable.date})`)
