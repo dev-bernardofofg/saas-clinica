@@ -25,6 +25,8 @@ interface PricingCardProps {
   hasSubscription?: boolean;
   onUpgrade?: () => void;
   email?: string;
+  plan: "free" | "initial";
+  userCurrentPlan: "free" | "initial";
 }
 
 export default function PricingCard({
@@ -44,6 +46,8 @@ export default function PricingCard({
   hasSubscription = false,
   onUpgrade,
   email,
+  plan,
+  userCurrentPlan,
 }: PricingCardProps) {
   const router = useRouter();
 
@@ -80,6 +84,57 @@ export default function PricingCard({
       `${process.env.NEXT_PUBLIC_STRIPE_CUSTOMER_PORTAL_URL}/?prefilled_email=${email}`,
     );
   };
+
+  const getButtonState = () => {
+    if (userCurrentPlan === "free") {
+      if (plan === "free") {
+        return {
+          text: "Plano atual",
+          variant: "outline" as const,
+          clickAction: "blocked" as const,
+          onClick: () => {},
+          disabled: true,
+        };
+      } else {
+        return {
+          text: "Realizar upgrade",
+          variant: "default" as const,
+          clickAction: "default" as const,
+          onClick: handleUpgrade,
+          disabled: isExecuting,
+        };
+      }
+    }
+
+    if (userCurrentPlan === "initial") {
+      if (plan === "free") {
+        return {
+          text: "Downgrade não disponível",
+          variant: "outline" as const,
+          clickAction: "blocked" as const,
+          onClick: () => {},
+          disabled: true,
+        };
+      } else {
+        return {
+          text: "Gerenciar assinatura",
+          variant: "default" as const,
+          clickAction: "default" as const,
+          onClick: handleManageSubscription,
+          disabled: isExecuting,
+        };
+      }
+    }
+    return {
+      text: "Realizar assinatura",
+      variant: "default" as const,
+      clickAction: "default" as const,
+      onClick: handleUpgrade,
+      disabled: isExecuting,
+    };
+  };
+
+  const buttonState = getButtonState();
 
   return (
     <Card className="relative w-full max-w-sm border border-gray-200 bg-white">
@@ -119,16 +174,13 @@ export default function PricingCard({
 
       <CardFooter>
         <BaseButton
-          variant={active ? "outline" : "default"}
+          variant={buttonState.variant}
           className="w-full"
-          onClick={active ? handleManageSubscription : handleUpgrade}
-          disabled={isExecuting}
+          onClick={buttonState.onClick}
+          disabled={buttonState.disabled}
+          clickAction={buttonState.clickAction}
         >
-          {active
-            ? "Gerenciar Assinatura"
-            : hasSubscription
-              ? "Gerenciar Assinatura"
-              : "Realizar Assinatura"}
+          {buttonState.text}
         </BaseButton>
       </CardFooter>
     </Card>

@@ -35,6 +35,8 @@ const Plains = async () => {
           ]}
           active={session.plan === "free"}
           email={session.email ?? undefined}
+          plan="free"
+          userCurrentPlan={session.plan}
         />
         <PricingCard
           title="Essential"
@@ -51,6 +53,8 @@ const Plains = async () => {
           ]}
           active={session.plan === "initial"}
           email={session.email ?? undefined}
+          plan="initial"
+          userCurrentPlan={session.plan}
         />
       </div>
     </Fade>
