@@ -1,3 +1,5 @@
+"use client";
+
 import { BaseButton } from "@/components/(bases)/base-button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -11,14 +13,19 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { auth } from "@/lib/auth";
 import { EllipsisVertical } from "lucide-react";
-import { headers } from "next/headers";
 
-export const SidebarUser = async () => {
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
+interface SidebarUserProps {
+  name?: string | null;
+  clinicName?: string | null;
+  avatarUrl?: string | null;
+}
+
+export const SidebarUser = ({
+  name,
+  clinicName,
+  avatarUrl,
+}: SidebarUserProps) => {
   return (
     <SidebarMenu>
       <SidebarMenuItem>
@@ -26,14 +33,12 @@ export const SidebarUser = async () => {
           <DropdownMenuTrigger asChild>
             <SidebarMenuButton>
               <Avatar>
-                <AvatarImage src="https://github.com/dev-bernardofofg.png" />
-                <AvatarFallback>{session?.user.name}</AvatarFallback>
+                <AvatarImage src={avatarUrl || undefined} />
+                <AvatarFallback>{name}</AvatarFallback>
               </Avatar>{" "}
               <div className="flex flex-col">
-                <span>{session?.user?.clinic?.name}</span>
-                <span className="text-muted-foreground text-xs">
-                  {session?.user.name}
-                </span>
+                <span>{clinicName}</span>
+                <span className="text-muted-foreground text-xs">{name}</span>
               </div>
               <EllipsisVertical className="ml-auto" />
             </SidebarMenuButton>

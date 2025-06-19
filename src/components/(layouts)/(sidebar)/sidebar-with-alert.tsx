@@ -1,3 +1,11 @@
+"use client";
+
+import {
+  SidebarContent,
+  SidebarFooter,
+  SidebarHeader,
+  SidebarSeparator,
+} from "@/components/ui/sidebar";
 import {
   CalendarDays,
   Gem,
@@ -5,18 +13,23 @@ import {
   Stethoscope,
   UserRound,
 } from "lucide-react";
-
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarFooter,
-  SidebarHeader,
-  SidebarSeparator,
-} from "@/components/ui/sidebar";
 import Image from "next/image";
 import Link from "next/link";
+import { SidebarUpgradeAlert } from "./sidebar-upgrade-alert";
 import { SidebarUser } from "./sidebar-user";
 import { SidebarSection } from "./siderbar-section";
+
+interface SidebarWithAlertProps {
+  plan: "free" | "initial";
+  currentCounts: {
+    doctors: number;
+    patients: number;
+    appointments: number;
+  };
+  userName?: string | null;
+  clinicName?: string | null;
+  avatarUrl?: string | null;
+}
 
 const menuPrincipal = [
   {
@@ -49,9 +62,15 @@ const others = [
   },
 ];
 
-export const AppSidebar = () => {
+export function SidebarWithAlert({
+  plan,
+  currentCounts,
+  userName,
+  clinicName,
+  avatarUrl,
+}: SidebarWithAlertProps) {
   return (
-    <Sidebar>
+    <>
       <SidebarHeader>
         <Link href="/dashboard" className="p-4">
           <Image
@@ -67,11 +86,19 @@ export const AppSidebar = () => {
       <SidebarContent>
         <SidebarSection title="Menu principal" items={menuPrincipal} />
         <SidebarSection title="Outros" items={others} />
+
+        {/* Alerta de upgrade */}
+        <SidebarUpgradeAlert plan={plan} currentCounts={currentCounts} />
       </SidebarContent>
+
       <SidebarSeparator />
       <SidebarFooter>
-        <SidebarUser />
+        <SidebarUser
+          name={userName}
+          clinicName={clinicName}
+          avatarUrl={avatarUrl}
+        />
       </SidebarFooter>
-    </Sidebar>
+    </>
   );
-};
+}

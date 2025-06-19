@@ -4,6 +4,10 @@ import { db } from "@/db";
 import { doctorsTable } from "@/db/schema";
 import { auth } from "@/lib/auth";
 import { actionClient } from "@/lib/next-safe-action";
+import {
+  checkPlanRestrictions,
+  getRestrictionErrorMessage,
+} from "@/lib/plan-restrictions";
 import { getCurrentClinicId } from "@/lib/session";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
@@ -40,6 +44,20 @@ export const upsertDoctor = actionClient
 
     if (!session.user.clinic?.id) {
       throw new Error("Clinic not found");
+    }
+
+    // Verificar restrições do plano apenas para criação de novos médicos
+    if (!parsedInput.id) {
+      const restrictions = await checkPlanRestrictions("doctors");
+      if (!restrictions.allowed) {
+        throw new Error(
+          getRestrictionErrorMessage(
+            "doctors",
+            restrictions.current,
+            restrictions.max,
+          ),
+        );
+      }
     }
 
     const clinicId = await getCurrentClinicId();

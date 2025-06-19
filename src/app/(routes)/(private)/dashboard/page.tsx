@@ -2,12 +2,18 @@ import { ListDoctor } from "@/components/(bases)/(list)/list-doctor";
 import TopSpecialities from "@/components/(bases)/(list)/top-speciality";
 import { BaseStats } from "@/components/(bases)/(stats)/base-stats";
 import { AppointmentsTable } from "@/components/(bases)/(tables)/appointments-table";
+import { PlanUsageStats } from "@/components/(bases)/plan-usage-stats";
 import AppointmentsChart from "@/components/(charts)/appointments-chart";
 import { FilterDashboardMetricsForm } from "@/components/(forms)/filter-dashboard-metrics.form";
 import { Header } from "@/components/(layouts)/header";
 import { Fade } from "@/components/(motions)/fade";
 import { db } from "@/db";
-import { usersToClinicsTable } from "@/db/schema";
+import {
+  appointmentsTable,
+  doctorsTable,
+  patientsTable,
+  usersToClinicsTable,
+} from "@/db/schema";
 import { getCurrentUser } from "@/lib/session";
 import { filterDashboardMetricsDefaultValues } from "@/schemas/dashboard.schema";
 import { serviceDashboard } from "@/services/dashboard.service";
@@ -55,6 +61,22 @@ const DashboardPage = async ({ searchParams }: DashboardPageProps) => {
   const startDate = startOfDay(fromDate);
   const endDate = endOfDay(toDate);
 
+  const [dashboardData, currentCounts] = await Promise.all([
+    serviceDashboard(startDate, endDate, session),
+    // Buscar contadores atuais para estatísticas do plano
+    Promise.all([
+      db.query.doctorsTable.findMany({
+        where: eq(doctorsTable.clinicId, session.clinic.id),
+      }),
+      db.query.patientsTable.findMany({
+        where: eq(patientsTable.clinicId, session.clinic.id),
+      }),
+      db.query.appointmentsTable.findMany({
+        where: eq(appointmentsTable.clinicId, session.clinic.id),
+      }),
+    ]),
+  ]);
+
   const {
     totalRevenue,
     totalAppointments,
@@ -64,7 +86,14 @@ const DashboardPage = async ({ searchParams }: DashboardPageProps) => {
     doctors,
     appointments,
     topSpecialities,
-  } = await serviceDashboard(startDate, endDate, session);
+  } = dashboardData;
+
+  const [doctorsList, patientsList, appointmentsList] = currentCounts;
+  const planCounts = {
+    doctors: doctorsList.length,
+    patients: patientsList.length,
+    appointments: appointmentsList.length,
+  };
 
   return (
     <Fade>
@@ -73,6 +102,13 @@ const DashboardPage = async ({ searchParams }: DashboardPageProps) => {
         description="Tenha uma visão geral da sua clínica"
         actions={<FilterDashboardMetricsForm />}
       />
+
+      {/* Estatísticas do plano para usuários free */}
+      {session.plan === "free" && (
+        <div className="mb-6">
+          <PlanUsageStats plan={session.plan} currentCounts={planCounts} />
+        </div>
+      )}
 
       <div className="grid grid-cols-4 gap-4">
         <BaseStats
