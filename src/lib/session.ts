@@ -9,6 +9,7 @@ export type SessionUser = {
     id: string;
     name: string;
   };
+  plan: "free" | "initial";
 };
 
 export async function getCurrentUser() {

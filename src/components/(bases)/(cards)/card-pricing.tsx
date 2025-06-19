@@ -12,6 +12,7 @@ import { Separator } from "@/components/ui/separator";
 import { loadStripe } from "@stripe/stripe-js";
 import { CheckCircle2 } from "lucide-react";
 import { useAction } from "next-safe-action/hooks";
+import { useRouter } from "next/navigation";
 import { BaseButton } from "../base-button";
 
 interface PricingCardProps {
@@ -23,6 +24,7 @@ interface PricingCardProps {
   active?: boolean;
   hasSubscription?: boolean;
   onUpgrade?: () => void;
+  email?: string;
 }
 
 export default function PricingCard({
@@ -41,7 +43,10 @@ export default function PricingCard({
   active = false,
   hasSubscription = false,
   onUpgrade,
+  email,
 }: PricingCardProps) {
+  const router = useRouter();
+
   const { execute, isExecuting } = useAction(createStripeCheckout, {
     onSuccess: async ({ data }) => {
       if (!process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY) {
@@ -68,6 +73,12 @@ export default function PricingCard({
 
   const handleUpgrade = () => {
     execute();
+  };
+
+  const handleManageSubscription = () => {
+    router.push(
+      `${process.env.NEXT_PUBLIC_STRIPE_CUSTOMER_PORTAL_URL}/?prefilled_email=${email}`,
+    );
   };
 
   return (
@@ -110,7 +121,7 @@ export default function PricingCard({
         <BaseButton
           variant={active ? "outline" : "default"}
           className="w-full"
-          onClick={active ? handleUpgrade : undefined}
+          onClick={active ? handleManageSubscription : handleUpgrade}
           disabled={isExecuting}
         >
           {active

@@ -17,11 +17,13 @@ export const patientSexEnum = pgEnum("patient_sex", [
   "female",
   "other",
 ]);
+
 export const patientStatusEnum = pgEnum("patient_status", [
   "active",
   "inactive",
   "blocked",
 ]);
+
 export const appointmentStatusEnum = pgEnum("appointment_status", [
   "scheduled",
   "confirmed",
@@ -44,6 +46,9 @@ export const usersTable = pgTable("users", {
   updatedAt: timestamp("updated_at")
     .defaultNow()
     .$onUpdate(() => new Date()),
+  stripeCustomerId: text("stripe_customer_id"),
+  stripeSubscriptionId: text("stripe_subscription_id"),
+  plan: text("plan").notNull().default("free").$type<"free" | "initial">(),
 });
 
 export const sessionsTable = pgTable("sessions", {
