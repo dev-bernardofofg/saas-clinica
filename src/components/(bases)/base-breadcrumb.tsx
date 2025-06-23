@@ -19,6 +19,8 @@ export const BaseBreadcrumb = () => {
     switch (path) {
       case "dashboard":
         return "Dashboard";
+      case "appointments":
+        return "Agendamentos";
       case "clinic-form":
         return "Cadastro de Clínica";
       case "plains":
