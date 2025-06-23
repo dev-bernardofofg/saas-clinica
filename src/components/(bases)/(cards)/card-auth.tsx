@@ -16,7 +16,7 @@ interface CardAuthProps {
 
 export const CardAuth = ({ children, title, description }: CardAuthProps) => {
   return (
-    <Card>
+    <Card className="border-none shadow-none">
       <CardHeader>
         <CardTitle>{title}</CardTitle>
         <CardDescription>{description}</CardDescription>

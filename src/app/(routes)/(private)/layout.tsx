@@ -9,7 +9,6 @@ import { Sidebar, SidebarProvider } from "@/components/ui/sidebar";
 import { db } from "@/db";
 import { appointmentsTable, doctorsTable, patientsTable } from "@/db/schema";
 import { auth } from "@/lib/auth";
-import { getCurrentUser } from "@/lib/session";
 
 const LayoutPrivate = async ({ children }: { children: React.ReactNode }) => {
   const headersList = await headers();
@@ -33,33 +32,28 @@ const LayoutPrivate = async ({ children }: { children: React.ReactNode }) => {
   let clinicName = session.user.clinic?.name || "";
   let avatarUrl = session.user.image || undefined;
 
-  try {
-    const user = await getCurrentUser();
-    if (user.clinic?.id) {
-      const [doctors, patients, appointments] = await Promise.all([
-        db.query.doctorsTable.findMany({
-          where: eq(doctorsTable.clinicId, user.clinic.id),
-        }),
-        db.query.patientsTable.findMany({
-          where: eq(patientsTable.clinicId, user.clinic.id),
-        }),
-        db.query.appointmentsTable.findMany({
-          where: eq(appointmentsTable.clinicId, user.clinic.id),
-        }),
-      ]);
+  // Se o usuário tem clínica, buscar contadores
+  if (session.user.clinic?.id) {
+    const [doctors, patients, appointments] = await Promise.all([
+      db.query.doctorsTable.findMany({
+        where: eq(doctorsTable.clinicId, session.user.clinic.id),
+      }),
+      db.query.patientsTable.findMany({
+        where: eq(patientsTable.clinicId, session.user.clinic.id),
+      }),
+      db.query.appointmentsTable.findMany({
+        where: eq(appointmentsTable.clinicId, session.user.clinic.id),
+      }),
+    ]);
 
-      currentCounts = {
-        doctors: doctors.length,
-        patients: patients.length,
-        appointments: appointments.length,
-      };
-      userName = user.name || userName;
-      clinicName = user.clinic?.name || clinicName;
-      avatarUrl = avatarUrl;
-    }
-  } catch (error) {
-    // Se houver erro, usar valores padrão
-    console.error("Erro ao buscar contadores:", error);
+    currentCounts = {
+      doctors: doctors.length,
+      patients: patients.length,
+      appointments: appointments.length,
+    };
+    userName = session.user.name || userName;
+    clinicName = session.user.clinic?.name || clinicName;
+    avatarUrl = avatarUrl;
   }
 
   return (

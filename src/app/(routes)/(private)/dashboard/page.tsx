@@ -6,7 +6,6 @@ import {
   StethoscopeIcon,
   UserIcon,
 } from "lucide-react";
-import { redirect } from "next/navigation";
 
 import { ListDoctor } from "@/components/(bases)/(list)/list-doctor";
 import TopSpecialities from "@/components/(bases)/(list)/top-speciality";
@@ -18,12 +17,7 @@ import { FilterDashboardMetricsForm } from "@/components/(forms)/filter-dashboar
 import { Header } from "@/components/(layouts)/header";
 import { Fade } from "@/components/(motions)/fade";
 import { db } from "@/db";
-import {
-  appointmentsTable,
-  doctorsTable,
-  patientsTable,
-  usersToClinicsTable,
-} from "@/db/schema";
+import { appointmentsTable, doctorsTable, patientsTable } from "@/db/schema";
 import { getCurrentUser } from "@/lib/session";
 import { filterDashboardMetricsDefaultValues } from "@/schemas/dashboard.schema";
 import { serviceDashboard } from "@/services/dashboard.service";
@@ -37,18 +31,6 @@ interface DashboardPageProps {
 
 const DashboardPage = async ({ searchParams }: DashboardPageProps) => {
   const session = await getCurrentUser();
-
-  const clinics = await db.query.usersToClinicsTable.findMany({
-    where: eq(usersToClinicsTable.userId, session.id),
-  });
-
-  if (clinics.length === 0) {
-    redirect("/clinic-form");
-  }
-
-  if (!session.clinic?.id) {
-    redirect("/clinic-form");
-  }
 
   const { from: rawFrom, to: rawTo } = await searchParams;
 
@@ -67,13 +49,13 @@ const DashboardPage = async ({ searchParams }: DashboardPageProps) => {
     // Buscar contadores atuais para estatísticas do plano
     Promise.all([
       db.query.doctorsTable.findMany({
-        where: eq(doctorsTable.clinicId, session.clinic.id),
+        where: eq(doctorsTable.clinicId, session.clinic!.id),
       }),
       db.query.patientsTable.findMany({
-        where: eq(patientsTable.clinicId, session.clinic.id),
+        where: eq(patientsTable.clinicId, session.clinic!.id),
       }),
       db.query.appointmentsTable.findMany({
-        where: eq(appointmentsTable.clinicId, session.clinic.id),
+        where: eq(appointmentsTable.clinicId, session.clinic!.id),
       }),
     ]),
   ]);

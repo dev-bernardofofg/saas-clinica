@@ -17,6 +17,7 @@ import {
   signUpSchema,
   signUpValues,
 } from "@/schemas/auth.schema";
+import Image from "next/image";
 
 export const SignUpForm = () => {
   const { push } = useRouter();
@@ -41,6 +42,13 @@ export const SignUpForm = () => {
         },
       },
     );
+  };
+
+  const handleGoogleSignUp = async () => {
+    await authClient.signIn.social({
+      provider: "google",
+      callbackURL: "/dashboard",
+    });
   };
 
   return (
@@ -71,6 +79,14 @@ export const SignUpForm = () => {
         />
         <BaseButton type="submit" isLoading={form.formState.isSubmitting}>
           Criar conta
+        </BaseButton>
+        <BaseButton
+          type="button"
+          onClick={handleGoogleSignUp}
+          variant="outline"
+        >
+          <Image src="/google-icon.svg" alt="Google" width={24} height={24} />
+          Entrar com Google
         </BaseButton>
       </BaseForm>
     </Form>

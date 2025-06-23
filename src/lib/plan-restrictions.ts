@@ -1,4 +1,5 @@
 import { eq } from "drizzle-orm";
+import { redirect } from "next/navigation";
 
 import { db } from "@/db";
 import { appointmentsTable, doctorsTable, patientsTable } from "@/db/schema";
@@ -24,7 +25,7 @@ export async function checkPlanRestrictions(
   const limits = PLAN_LIMITS[user.plan];
 
   if (!user.clinic?.id) {
-    throw new Error("Clinic not found");
+    redirect("/clinic-form");
   }
 
   let current = 0;

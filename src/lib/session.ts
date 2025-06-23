@@ -1,4 +1,5 @@
 import { headers } from "next/headers";
+import { redirect } from "next/navigation";
 
 import { auth } from "@/lib/auth";
 
@@ -23,7 +24,7 @@ export async function getCurrentUser() {
   }
 
   if (!session.user.clinic) {
-    throw new Error("Clinic not found");
+    redirect("/clinic-form");
   }
 
   return session.user as SessionUser;
@@ -33,7 +34,7 @@ export async function getCurrentClinicId() {
   const user = await getCurrentUser();
 
   if (!user.clinic?.id) {
-    throw new Error("No clinic found for current user");
+    redirect("/clinic-form");
   }
 
   return user.clinic.id;
@@ -43,7 +44,7 @@ export async function getCurrentClinic() {
   const user = await getCurrentUser();
 
   if (!user.clinic) {
-    throw new Error("No clinic found for current user");
+    redirect("/clinic-form");
   }
 
   return user.clinic;

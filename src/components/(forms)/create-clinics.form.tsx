@@ -30,7 +30,6 @@ export const CreateClinicsForm = () => {
     try {
       await createClinic(data);
       toast.success("Clínica criada com sucesso");
-      form.reset();
     } catch (error) {
       if (isRedirectError(error)) {
         return;

@@ -1,4 +1,4 @@
-import { eq } from "drizzle-orm";
+import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
 import { CreateClinicsForm } from "@/components/(forms)/create-clinics.form";
@@ -9,20 +9,22 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { db } from "@/db";
-import { usersToClinicsTable } from "@/db/schema";
-import { getCurrentUser } from "@/lib/session";
+import { auth } from "@/lib/auth";
 
 const ClinicFormPage = async () => {
-  const session = await getCurrentUser();
-
-  const clinics = await db.query.usersToClinicsTable.findMany({
-    where: eq(usersToClinicsTable.userId, session.id),
+  const session = await auth.api.getSession({
+    headers: await headers(),
   });
 
-  if (clinics.length > 0) {
+  if (!session?.user) {
+    redirect("/");
+  }
+
+  // Se o usuário já tem uma clínica, redirecionar para dashboard
+  if (session.user.clinic) {
     redirect("/dashboard");
   }
+
   return (
     <Dialog open>
       <DialogContent>
