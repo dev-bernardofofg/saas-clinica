@@ -1,8 +1,9 @@
+import Image from "next/image";
+
 import { CardAuth } from "@/components/(bases)/(cards)/card-auth";
 import { SignInForm } from "@/components/(forms)/sign-in.form";
 import { SignUpForm } from "@/components/(forms)/sign-up.form";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import Image from "next/image";
 
 const LoginPage = () => {
   return (
