@@ -11,6 +11,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import {
+  Sidebar,
   SidebarContent,
   SidebarFooter,
   SidebarHeader,
@@ -72,7 +73,7 @@ export function SidebarWithAlert({
   avatarUrl,
 }: SidebarWithAlertProps) {
   return (
-    <>
+    <Sidebar>
       <SidebarHeader>
         <Link href="/dashboard" className="p-4">
           <Image
@@ -101,6 +102,6 @@ export function SidebarWithAlert({
           avatarUrl={avatarUrl}
         />
       </SidebarFooter>
-    </>
+    </Sidebar>
   );
 }

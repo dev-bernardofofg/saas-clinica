@@ -5,7 +5,7 @@ import React from "react";
 
 import { BaseBreadcrumb } from "@/components/(bases)/base-breadcrumb";
 import { SidebarWithAlert } from "@/components/(layouts)/(sidebar)/sidebar-with-alert";
-import { Sidebar, SidebarProvider } from "@/components/ui/sidebar";
+import { SidebarProvider } from "@/components/ui/sidebar";
 import { db } from "@/db";
 import { appointmentsTable, doctorsTable, patientsTable } from "@/db/schema";
 import { auth } from "@/lib/auth";
@@ -58,15 +58,13 @@ const LayoutPrivate = async ({ children }: { children: React.ReactNode }) => {
 
   return (
     <SidebarProvider>
-      <Sidebar>
-        <SidebarWithAlert
-          plan={session.user.plan || "free"}
-          currentCounts={currentCounts}
-          userName={userName}
-          clinicName={clinicName}
-          avatarUrl={avatarUrl}
-        />
-      </Sidebar>
+      <SidebarWithAlert
+        plan={session.user.plan || "free"}
+        currentCounts={currentCounts}
+        userName={userName}
+        clinicName={clinicName}
+        avatarUrl={avatarUrl}
+      />
       <main className="w-full bg-gray-100">
         <div className="flex flex-col px-6 py-8">
           <BaseBreadcrumb />
