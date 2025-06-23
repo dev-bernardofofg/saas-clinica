@@ -1,12 +1,13 @@
 "use server";
 
+import { eq } from "drizzle-orm";
+import { revalidatePath } from "next/cache";
+import { z } from "zod";
+
 import { db } from "@/db";
 import { patientsTable } from "@/db/schema";
 import { actionClient } from "@/lib/next-safe-action";
 import { getCurrentUser } from "@/lib/session";
-import { eq } from "drizzle-orm";
-import { revalidatePath } from "next/cache";
-import { z } from "zod";
 
 const schema = z.object({
   id: z.string().uuid(),

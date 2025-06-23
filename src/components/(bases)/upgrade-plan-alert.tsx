@@ -1,9 +1,10 @@
 "use client";
 
-import { BaseButton } from "@/components/(bases)/base-button";
-import { Card, CardContent } from "@/components/ui/card";
 import { AlertTriangle, Crown, Zap } from "lucide-react";
 import Link from "next/link";
+
+import { BaseButton } from "@/components/(bases)/base-button";
+import { Card, CardContent } from "@/components/ui/card";
 
 interface UpgradePlanAlertProps {
   type: "warning" | "limit-reached";

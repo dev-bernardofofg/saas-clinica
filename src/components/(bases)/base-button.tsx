@@ -1,12 +1,12 @@
 "use client";
 
 import { Loader2, Lock, Plus } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { ComponentProps } from "react";
 
 import { Button } from "@/components/ui/button";
 import { authClient } from "@/lib/auth-client";
 import { cn } from "@/lib/utils";
-import { useRouter } from "next/navigation";
 
 interface BaseButtonProps extends ComponentProps<typeof Button> {
   isLoading?: boolean;

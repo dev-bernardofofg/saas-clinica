@@ -1,5 +1,10 @@
 "use client";
 
+import { loadStripe } from "@stripe/stripe-js";
+import { CheckCircle2 } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useAction } from "next-safe-action/hooks";
+
 import { createStripeCheckout } from "@/actions/create-stripe-checkout";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -9,10 +14,7 @@ import {
   CardHeader,
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { loadStripe } from "@stripe/stripe-js";
-import { CheckCircle2 } from "lucide-react";
-import { useAction } from "next-safe-action/hooks";
-import { useRouter } from "next/navigation";
+
 import { BaseButton } from "../base-button";
 
 interface PricingCardProps {
@@ -43,8 +45,6 @@ export default function PricingCard({
     "Suporte via e-mail",
   ],
   active = false,
-  hasSubscription = false,
-  onUpgrade,
   email,
   plan,
   userCurrentPlan,
@@ -69,7 +69,7 @@ export default function PricingCard({
         throw new Error("Session ID is not set");
       }
 
-      const { error } = await stripe.redirectToCheckout({
+      await stripe.redirectToCheckout({
         sessionId: data?.sessionId,
       });
     },

@@ -1,5 +1,6 @@
-import { formatCurrencyInCents } from "@/helpers/number";
 import { LucideIcon } from "lucide-react";
+
+import { formatCurrencyInCents } from "@/helpers/number";
 
 interface BaseStatsProps {
   title: string;

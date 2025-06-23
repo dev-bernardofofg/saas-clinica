@@ -1,3 +1,6 @@
+import { motion } from "framer-motion";
+import type { Control, FieldValues, Path } from "react-hook-form";
+
 import {
   FormControl,
   FormDescription,
@@ -15,8 +18,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { motion } from "framer-motion";
-import type { Control, FieldValues, Path } from "react-hook-form";
 
 type Option = { label: string; value: string | number; available?: boolean };
 type OptionGroup = { label: string; options: Option[] };

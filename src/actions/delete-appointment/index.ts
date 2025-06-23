@@ -1,12 +1,13 @@
 "use server";
 
+import { eq } from "drizzle-orm";
+import { revalidatePath } from "next/cache";
+import { z } from "zod";
+
 import { db } from "@/db";
 import { appointmentsTable } from "@/db/schema";
 import { actionClient } from "@/lib/next-safe-action";
 import { getCurrentUser } from "@/lib/session";
-import { eq } from "drizzle-orm";
-import { revalidatePath } from "next/cache";
-import { z } from "zod";
 
 export const deleteAppointment = actionClient
   .schema(z.string().uuid())

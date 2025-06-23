@@ -1,5 +1,9 @@
 "use client";
 
+import { motion } from "framer-motion";
+import { LucideIcon } from "lucide-react";
+import { Control, FieldValues, Path, useFormContext } from "react-hook-form";
+
 import {
   FormControl,
   FormDescription,
@@ -9,9 +13,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
-import { motion } from "framer-motion";
-import { LucideIcon } from "lucide-react";
-import { Control, FieldValues, Path, useFormContext } from "react-hook-form";
 
 type BaseTextareaProps<T extends FieldValues> = {
   control?: Control<T>;

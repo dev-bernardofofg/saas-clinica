@@ -1,5 +1,12 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
+import dayjs from "dayjs";
+import { Home, Mail, Pen, Plus, User } from "lucide-react";
+import { useAction } from "next-safe-action/hooks";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+
 import { upsertPatient } from "@/actions/upsert-patient";
 import { BaseDatePicker } from "@/components/(bases)/(inputs)/base-date-picker";
 import { BaseInput } from "@/components/(bases)/(inputs)/base-input";
@@ -12,12 +19,6 @@ import { Form } from "@/components/ui/form";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { patientsTable } from "@/db/schema";
 import { PatientValues, SchemaPatient } from "@/schemas/patient.schema";
-import { zodResolver } from "@hookform/resolvers/zod";
-import dayjs from "dayjs";
-import { Home, Mail, Pen, Plus, User } from "lucide-react";
-import { useAction } from "next-safe-action/hooks";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
 
 interface UpsertPatientFormProps {
   patient?: typeof patientsTable.$inferSelect;
@@ -29,7 +30,7 @@ export const UpsertPatientForm = ({
   onSuccess,
 }: UpsertPatientFormProps) => {
   const form = useForm<PatientValues>({
-    resolver: zodResolver(SchemaPatient) as any,
+    resolver: zodResolver(SchemaPatient),
     defaultValues: {
       name: patient?.name ?? "",
       email: patient?.email ?? "",

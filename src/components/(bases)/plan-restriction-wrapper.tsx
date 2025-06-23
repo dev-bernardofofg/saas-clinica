@@ -1,8 +1,9 @@
 "use client";
 
+import { ReactNode } from "react";
+
 import { UpgradePlanAlert } from "@/components/(bases)/upgrade-plan-alert";
 import { usePlanLimitations } from "@/hooks/use-plan-limitations";
-import { ReactNode } from "react";
 
 interface PlanRestrictionWrapperProps {
   plan: "free" | "initial";

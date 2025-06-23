@@ -1,11 +1,12 @@
 "use server";
 
+import { headers } from "next/headers";
+import { redirect } from "next/navigation";
+
 import { db } from "@/db";
 import { clinicsTable, usersToClinicsTable } from "@/db/schema";
 import { auth } from "@/lib/auth";
 import { clinicValues } from "@/schemas/clinic.schema";
-import { headers } from "next/headers";
-import { redirect } from "next/navigation";
 
 export const createClinic = async (data: clinicValues) => {
   const session = await auth.api.getSession({

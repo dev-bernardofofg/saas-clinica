@@ -1,14 +1,16 @@
 "use client";
 
-import { deleteAppointment } from "@/actions/delete-appointment";
-import { Badge } from "@/components/ui/badge";
-import { appointmentsTable } from "@/db/schema";
-import { formatCurrencyInCents } from "@/helpers/number";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { Trash } from "lucide-react";
 import { useAction } from "next-safe-action/hooks";
 import { toast } from "sonner";
+
+import { deleteAppointment } from "@/actions/delete-appointment";
+import { Badge } from "@/components/ui/badge";
+import { appointmentsTable } from "@/db/schema";
+import { formatCurrencyInCents } from "@/helpers/number";
+
 import { BaseAlertDialog } from "../(dialog)/base-alert-dialog";
 import { BaseButton } from "../base-button";
 import { BaseTable } from "../base-table";

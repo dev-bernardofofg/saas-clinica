@@ -1,15 +1,17 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
+import { isRedirectError } from "next/dist/client/components/redirect-error";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+
 import { createClinic } from "@/actions/create-clinic";
 import {
   clinicSchema,
   clinicValues,
   clinicValuesSchema,
 } from "@/schemas/clinic.schema";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { isRedirectError } from "next/dist/client/components/redirect-error";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
+
 import { BaseInput } from "../(bases)/(inputs)/base-input";
 import { FileInput } from "../(bases)/(inputs)/base-input-file";
 import { MaskedInput } from "../(bases)/(inputs)/base-input-masked";

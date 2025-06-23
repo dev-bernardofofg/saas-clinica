@@ -1,5 +1,10 @@
 "use client";
 
+import { motion } from "framer-motion";
+import { LucideIcon, Phone } from "lucide-react";
+import { Control, FieldValues, Path, useFormContext } from "react-hook-form";
+import { PatternFormat, PatternFormatProps } from "react-number-format";
+
 import {
   FormControl,
   FormDescription,
@@ -8,12 +13,8 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+import { Input, InputProps } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
-import { motion } from "framer-motion";
-import { LucideIcon, Phone } from "lucide-react";
-import { Control, FieldValues, Path, useFormContext } from "react-hook-form";
-import { PatternFormat } from "react-number-format";
 
 type BasePhoneInputProps<T extends FieldValues> = {
   control?: Control<T>;
@@ -30,12 +31,16 @@ const PhoneInput = ({
   className,
   placeholder,
   ...props
-}: any) => (
+}: PatternFormatProps<InputProps>) => (
   <PatternFormat
-    format="(##) #####-####"
     customInput={Input}
     value={value}
-    onValueChange={(values) => onChange(values.value)}
+    onValueChange={(values) => {
+      const syntheticEvent = {
+        target: { value: values.value },
+      } as React.ChangeEvent<HTMLInputElement>;
+      onChange?.(syntheticEvent);
+    }}
     className={className}
     placeholder={placeholder}
     {...props}
@@ -80,6 +85,7 @@ export function BasePhoneInput<T extends FieldValues>({
                 {...field}
                 className={cn("pl-10")}
                 placeholder={placeholder}
+                format="(##) #####-####"
               />
             </div>
           </FormControl>

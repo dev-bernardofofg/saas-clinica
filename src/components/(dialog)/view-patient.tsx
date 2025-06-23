@@ -1,5 +1,7 @@
 "use client";
 
+import { Eye, Heart, Phone, Stethoscope, User2 } from "lucide-react";
+
 import {
   Dialog,
   DialogContent,
@@ -10,7 +12,7 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { patientsTable } from "@/db/schema";
 import { formatPhoneNumber } from "@/helpers/number";
-import { Eye, Heart, Phone, Stethoscope, User2 } from "lucide-react";
+
 import { BaseButton } from "../(bases)/base-button";
 import { Badge } from "../ui/badge";
 

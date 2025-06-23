@@ -40,15 +40,5 @@ You are a senior software engineer specialized in modern web development, with d
 * Always use Zod for form validation.
 * Always use React Hook Form for creating and validating forms. Use the [form.tsx](mdc:src/components/ui/form.tsx) component to create these forms. Example: [upsert-doctor.form.tsx](mdc:src/components/(forms)/upsert-doctor.form.tsx).
 * When needed, create reusable components and functions to reduce code duplication.
-* When a component is only used on a specific page, place it in the `_components` folder inside that page’s directory.
-* Always use the `next-safe-action` library when creating Server Actions. Example: [index.ts](mdc:src/actions/upsert-doctor/index.ts).
-* Always use the `useAction` hook from the `next-safe-actions` library when calling Server Actions in components. Example:  [upsert-doctor.form.tsx](mdc:src/components/(forms).
-* Server Actions must be stored in `src/actions` (follow the naming pattern of the existing ones).
-* Whenever you need to interact with the database, use [index.ts](mdc:src/db/index.ts).
-* We use the `dayjs` library to manipulate and format dates.
-* When creating pages, use the components inside [fade.tsx](mdc:src/components/(motions)/fade.tsx) to maintain margin, padding, and spacing standards across pages.
-* Always use the `react-number-format` library when creating input masks.
-* If you need use session user, u can find in [session.ts](mdc:src/lib/session.ts)
-
-
-
+* When a component is only used on a specific page, place it in the `_components` folder inside that page's directory.
+* Always use the `next-safe-action`

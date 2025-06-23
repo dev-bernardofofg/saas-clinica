@@ -1,8 +1,9 @@
 "use server";
 
+import Stripe from "stripe";
+
 import { actionClient } from "@/lib/safe-action";
 import { getCurrentUser } from "@/lib/session";
-import Stripe from "stripe";
 
 export const createStripeCheckout = actionClient.action(async () => {
   const session = await getCurrentUser();

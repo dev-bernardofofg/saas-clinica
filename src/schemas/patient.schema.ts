@@ -8,10 +8,10 @@ export const SchemaPatient = z.object({
   sex: z.enum(["male", "female", "other"]),
   dateOfBirth: z.string().min(1, { message: "*" }),
   address: z.string().min(1, { message: "*" }),
-  emergencyContact: z.string().default(""),
-  emergencyPhone: z.string().default(""),
-  medicalHistory: z.string().default(""),
-  allergies: z.string().default(""),
+  emergencyContact: z.string(),
+  emergencyPhone: z.string(),
+  medicalHistory: z.string(),
+  allergies: z.string(),
 });
 
 export type PatientValues = z.infer<typeof SchemaPatient>;

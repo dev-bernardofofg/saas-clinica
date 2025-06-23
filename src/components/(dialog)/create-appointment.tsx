@@ -1,9 +1,10 @@
 "use client";
 
+import { useState } from "react";
+
 import { BaseDialog } from "@/components/(bases)/(dialog)/base-dialog";
 import { CreateAppointmentForm } from "@/components/(forms)/create-appointment.form";
 import { doctorsTable, patientsTable } from "@/db/schema";
-import { useState } from "react";
 
 interface CreateAppointmentDialogProps {
   patients: (typeof patientsTable.$inferSelect)[];

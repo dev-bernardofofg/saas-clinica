@@ -1,3 +1,7 @@
+import { ChevronDown, Clock } from "lucide-react";
+import { useState } from "react";
+import { Control, FieldValues, Path, useController } from "react-hook-form";
+
 import { Button } from "@/components/ui/button";
 import {
   FormControl,
@@ -12,9 +16,6 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { ChevronDown, Clock } from "lucide-react";
-import { useState } from "react";
-import { Control, FieldValues, Path, useController } from "react-hook-form";
 
 type TimePickerProps<T extends FieldValues> = {
   control: Control<T>;

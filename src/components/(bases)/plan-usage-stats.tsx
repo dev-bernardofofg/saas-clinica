@@ -1,10 +1,11 @@
 "use client";
 
+import { Calendar, UserCheck, Users } from "lucide-react";
+
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { usePlanLimitations } from "@/hooks/use-plan-limitations";
-import { Calendar, UserCheck, Users } from "lucide-react";
 
 interface PlanUsageStatsProps {
   plan: "free" | "initial";

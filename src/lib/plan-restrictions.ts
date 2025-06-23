@@ -1,7 +1,8 @@
+import { eq } from "drizzle-orm";
+
 import { db } from "@/db";
 import { appointmentsTable, doctorsTable, patientsTable } from "@/db/schema";
 import { getCurrentUser } from "@/lib/session";
-import { eq } from "drizzle-orm";
 
 export const PLAN_LIMITS = {
   free: {

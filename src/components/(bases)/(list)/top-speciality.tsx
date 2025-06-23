@@ -1,9 +1,3 @@
-import { CardContent, CardHeader } from "@/components/ui/card";
-
-import { Card } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
-import { cn } from "@/lib/utils";
-
 import {
   Activity,
   Baby,
@@ -14,6 +8,11 @@ import {
   UserCheck,
 } from "lucide-react";
 import Link from "next/link";
+
+import { CardContent, CardHeader } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
+import { cn } from "@/lib/utils";
 
 const getSpecialtyIcon = (specialty: string) => {
   const iconMap: { [key: string]: React.ReactNode } = {

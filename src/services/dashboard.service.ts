@@ -1,15 +1,19 @@
-import { desc } from "drizzle-orm";
+import { and, count, desc, eq, sql, sum } from "drizzle-orm";
 
 import { db } from "@/db";
 import { appointmentsTable, doctorsTable, patientsTable } from "@/db/schema";
 import { SessionUser } from "@/lib/session";
-import { and, count, eq, sql, sum } from "drizzle-orm";
 
 export const serviceDashboard = async (
   startDate: Date,
   endDate: Date,
   session: SessionUser,
 ) => {
+  const clinicId = session.clinic?.id;
+  if (!clinicId) {
+    throw new Error("ID da clínica não está disponível no session.");
+  }
+
   const [
     [totalRevenue],
     [totalAppointments],
@@ -27,7 +31,7 @@ export const serviceDashboard = async (
       .from(appointmentsTable)
       .where(
         and(
-          eq(appointmentsTable.clinicId, session.clinic?.id!),
+          eq(appointmentsTable.clinicId, clinicId),
           sql`DATE(${appointmentsTable.date}) >= DATE(${startDate})`,
           sql`DATE(${appointmentsTable.date}) <= DATE(${endDate})`,
         ),
@@ -39,7 +43,7 @@ export const serviceDashboard = async (
       .from(appointmentsTable)
       .where(
         and(
-          eq(appointmentsTable.clinicId, session.clinic?.id!),
+          eq(appointmentsTable.clinicId, clinicId),
           sql`DATE(${appointmentsTable.date}) >= DATE(${startDate})`,
           sql`DATE(${appointmentsTable.date}) <= DATE(${endDate})`,
         ),
@@ -49,13 +53,13 @@ export const serviceDashboard = async (
         total: count(patientsTable.id),
       })
       .from(patientsTable)
-      .where(eq(patientsTable.clinicId, session.clinic?.id!)),
+      .where(eq(patientsTable.clinicId, clinicId)),
     db
       .select({
         total: count(doctorsTable.id),
       })
       .from(doctorsTable)
-      .where(eq(doctorsTable.clinicId, session.clinic?.id!)),
+      .where(eq(doctorsTable.clinicId, clinicId)),
     db
       .select({
         id: doctorsTable.id,
@@ -69,12 +73,12 @@ export const serviceDashboard = async (
         appointmentsTable,
         and(
           eq(appointmentsTable.doctorId, doctorsTable.id),
-          eq(appointmentsTable.clinicId, session.clinic?.id!),
+          eq(appointmentsTable.clinicId, clinicId),
           sql`DATE(${appointmentsTable.date}) >= DATE(${startDate})`,
           sql`DATE(${appointmentsTable.date}) <= DATE(${endDate})`,
         ),
       )
-      .where(eq(doctorsTable.clinicId, session.clinic?.id!))
+      .where(eq(doctorsTable.clinicId, clinicId))
       .groupBy(
         doctorsTable.id,
         doctorsTable.name,
@@ -95,7 +99,7 @@ export const serviceDashboard = async (
       .from(appointmentsTable)
       .where(
         and(
-          eq(appointmentsTable.clinicId, session.clinic?.id!),
+          eq(appointmentsTable.clinicId, clinicId),
           sql`DATE(${appointmentsTable.date}) >= DATE(${startDate})`,
           sql`DATE(${appointmentsTable.date}) <= DATE(${endDate})`,
         ),
@@ -112,7 +116,7 @@ export const serviceDashboard = async (
       .innerJoin(doctorsTable, eq(appointmentsTable.doctorId, doctorsTable.id))
       .where(
         and(
-          eq(appointmentsTable.clinicId, session.clinic?.id!),
+          eq(appointmentsTable.clinicId, clinicId),
           sql`DATE(${appointmentsTable.date}) >= DATE(${startDate})`,
           sql`DATE(${appointmentsTable.date}) <= DATE(${endDate})`,
         ),
@@ -122,7 +126,7 @@ export const serviceDashboard = async (
 
     db.query.appointmentsTable.findMany({
       where: and(
-        eq(appointmentsTable.clinicId, session.clinic?.id!),
+        eq(appointmentsTable.clinicId, clinicId),
         sql`DATE(${appointmentsTable.date}) >= DATE(${startDate})`,
         sql`DATE(${appointmentsTable.date}) <= DATE(${endDate})`,
       ),

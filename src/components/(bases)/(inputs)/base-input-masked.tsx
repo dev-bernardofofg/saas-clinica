@@ -1,3 +1,6 @@
+import { InputMask } from "@react-input/mask";
+import { Control, FieldValues, Path } from "react-hook-form";
+
 import {
   FormControl,
   FormDescription,
@@ -6,8 +9,6 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { InputMask } from "@react-input/mask";
-import { Control, FieldValues, Path } from "react-hook-form";
 
 type MaskedInputProps<T extends FieldValues> = {
   control: Control<T>;

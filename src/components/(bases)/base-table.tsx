@@ -1,5 +1,8 @@
 "use client";
 
+import { Table2Icon } from "lucide-react";
+import Link from "next/link";
+
 import {
   Table,
   TableBody,
@@ -9,14 +12,12 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
-import { Table2Icon } from "lucide-react";
-import Link from "next/link";
 
 interface Column<T> {
   header: string;
   accessorKey: keyof T;
   className?: string;
-  cell?: (value: any, item: T) => React.ReactNode;
+  cell?: (value: T[keyof T], item: T) => React.ReactNode;
 }
 
 interface BaseTableProps<T> {

@@ -1,5 +1,10 @@
 "use client";
 
+import { motion } from "framer-motion";
+import { ForwardedRef, forwardRef } from "react";
+import { Control, FieldValues, Path } from "react-hook-form";
+import { NumericFormat, NumericFormatProps } from "react-number-format";
+
 import {
   FormControl,
   FormField,
@@ -9,10 +14,6 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
-import { motion } from "framer-motion";
-import { ForwardedRef, forwardRef } from "react";
-import { Control, FieldValues, Path } from "react-hook-form";
-import { NumericFormat, NumericFormatProps } from "react-number-format";
 
 type BaseCurrencyInputProps<T extends FieldValues> = {
   control: Control<T>;

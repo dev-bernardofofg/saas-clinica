@@ -1,5 +1,14 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useQuery } from "@tanstack/react-query";
+import dayjs from "dayjs";
+import { Plus } from "lucide-react";
+import { useAction } from "next-safe-action/hooks";
+import { useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+
 import { createAppointment } from "@/actions/create-appointment";
 import { getAvailableTimes } from "@/actions/get-available-times";
 import { BaseDatePicker } from "@/components/(bases)/(inputs)/base-date-picker";
@@ -14,14 +23,6 @@ import {
   AppointmentValues,
   SchemaAppointment,
 } from "@/schemas/appointment.schema";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useQuery } from "@tanstack/react-query";
-import dayjs from "dayjs";
-import { Plus } from "lucide-react";
-import { useAction } from "next-safe-action/hooks";
-import { useEffect } from "react";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
 
 interface CreateAppointmentFormProps {
   patients: (typeof patientsTable.$inferSelect)[];

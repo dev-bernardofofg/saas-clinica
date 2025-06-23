@@ -2,7 +2,9 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Lock, Mail, User } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 
 import { BaseInput } from "@/components/(bases)/(inputs)/base-input";
 import { BaseButton } from "@/components/(bases)/base-button";
@@ -15,8 +17,6 @@ import {
   signUpSchema,
   signUpValues,
 } from "@/schemas/auth.schema";
-import { useRouter } from "next/navigation";
-import { toast } from "sonner";
 
 export const SignUpForm = () => {
   const { push } = useRouter();

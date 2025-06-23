@@ -1,12 +1,6 @@
 "use client";
 
 import {
-  SidebarContent,
-  SidebarFooter,
-  SidebarHeader,
-  SidebarSeparator,
-} from "@/components/ui/sidebar";
-import {
   CalendarDays,
   Gem,
   LayoutDashboard,
@@ -15,6 +9,14 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+
+import {
+  SidebarContent,
+  SidebarFooter,
+  SidebarHeader,
+  SidebarSeparator,
+} from "@/components/ui/sidebar";
+
 import { SidebarUpgradeAlert } from "./sidebar-upgrade-alert";
 import { SidebarUser } from "./sidebar-user";
 import { SidebarSection } from "./siderbar-section";

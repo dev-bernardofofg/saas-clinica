@@ -1,14 +1,16 @@
 "use server";
 
+import dayjs from "dayjs";
+import { and, eq } from "drizzle-orm";
+import { revalidatePath } from "next/cache";
+import { headers } from "next/headers";
+
 import { db } from "@/db";
 import { appointmentsTable } from "@/db/schema";
 import { auth } from "@/lib/auth";
 import { actionClient } from "@/lib/safe-action";
 import { getCurrentClinicId } from "@/lib/session";
-import dayjs from "dayjs";
-import { and, eq } from "drizzle-orm";
-import { revalidatePath } from "next/cache";
-import { headers } from "next/headers";
+
 import { createAppointmentSchema } from "./schema";
 
 export const createAppointment = actionClient

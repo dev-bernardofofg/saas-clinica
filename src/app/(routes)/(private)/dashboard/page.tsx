@@ -1,3 +1,13 @@
+import { endOfDay, parseISO, startOfDay } from "date-fns";
+import { eq } from "drizzle-orm";
+import {
+  CalendarIcon,
+  DollarSignIcon,
+  StethoscopeIcon,
+  UserIcon,
+} from "lucide-react";
+import { redirect } from "next/navigation";
+
 import { ListDoctor } from "@/components/(bases)/(list)/list-doctor";
 import TopSpecialities from "@/components/(bases)/(list)/top-speciality";
 import { BaseStats } from "@/components/(bases)/(stats)/base-stats";
@@ -17,15 +27,6 @@ import {
 import { getCurrentUser } from "@/lib/session";
 import { filterDashboardMetricsDefaultValues } from "@/schemas/dashboard.schema";
 import { serviceDashboard } from "@/services/dashboard.service";
-import { endOfDay, parseISO, startOfDay } from "date-fns";
-import { eq } from "drizzle-orm";
-import {
-  CalendarIcon,
-  DollarSignIcon,
-  StethoscopeIcon,
-  UserIcon,
-} from "lucide-react";
-import { redirect } from "next/navigation";
 
 interface DashboardPageProps {
   searchParams: Promise<{

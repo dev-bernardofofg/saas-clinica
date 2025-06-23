@@ -1,5 +1,10 @@
 "use client";
 
+import { parseISO } from "date-fns";
+import { parseAsIsoDate, useQueryState } from "nuqs";
+import { useCallback, useEffect } from "react";
+import { useForm } from "react-hook-form";
+
 import { BaseDateRangePicker } from "@/components/(bases)/(inputs)/base-date-range-picker";
 import { BaseForm } from "@/components/(bases)/base-form";
 import { Form } from "@/components/ui/form";
@@ -7,10 +12,6 @@ import {
   filterDashboardMetricsDefaultValues,
   FilterDashboardMetricsSchema,
 } from "@/schemas/dashboard.schema";
-import { parseISO } from "date-fns";
-import { parseAsIsoDate, useQueryState } from "nuqs";
-import { useEffect } from "react";
-import { useForm } from "react-hook-form";
 
 export const FilterDashboardMetricsForm = () => {
   const form = useForm<FilterDashboardMetricsSchema>({
@@ -27,20 +28,21 @@ export const FilterDashboardMetricsForm = () => {
     parseAsIsoDate.withDefault(new Date()),
   );
 
-  const handleFilterMetrics = (data: FilterDashboardMetricsSchema) => {
-    console.log(data);
-
-    if (data?.from) {
-      setFrom(parseISO(data.from), {
-        shallow: false,
-      });
-    }
-    if (data?.to) {
-      setTo(parseISO(data.to), {
-        shallow: false,
-      });
-    }
-  };
+  const handleFilterMetrics = useCallback(
+    (data: FilterDashboardMetricsSchema) => {
+      if (data?.from) {
+        setFrom(parseISO(data.from), {
+          shallow: false,
+        });
+      }
+      if (data?.to) {
+        setTo(parseISO(data.to), {
+          shallow: false,
+        });
+      }
+    },
+    [setFrom, setTo],
+  );
 
   const date = {
     from,
@@ -48,14 +50,14 @@ export const FilterDashboardMetricsForm = () => {
   };
 
   useEffect(() => {
-    const subscription = form.watch((value, { name }) => {
+    const subscription = form.watch((_, { name }) => {
       if (name === "from" || name === "to") {
         form.handleSubmit(handleFilterMetrics)();
       }
     });
 
     return () => subscription.unsubscribe();
-  }, [form]);
+  }, [form, handleFilterMetrics]);
 
   return (
     <Form {...form}>

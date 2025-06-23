@@ -1,10 +1,11 @@
+import { Stethoscope } from "lucide-react";
+import Link from "next/link";
+
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { getInitialsName } from "@/helpers/string";
 import { cn } from "@/lib/utils";
-import { Stethoscope } from "lucide-react";
-import Link from "next/link";
 
 interface ListDoctorsProps {
   doctors: {

@@ -1,8 +1,9 @@
+import { redirect } from "next/navigation";
+
 import PricingCard from "@/components/(bases)/(cards)/card-pricing";
 import { Header } from "@/components/(layouts)/header";
 import { Fade } from "@/components/(motions)/fade";
 import { getCurrentUser } from "@/lib/session";
-import { redirect } from "next/navigation";
 
 const Plains = async () => {
   const session = await getCurrentUser();

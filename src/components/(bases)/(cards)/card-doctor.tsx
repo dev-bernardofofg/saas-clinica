@@ -1,5 +1,9 @@
 "use client";
 
+import { CalendarIcon, ClockIcon, DollarSignIcon, Trash } from "lucide-react";
+import { useAction } from "next-safe-action/hooks";
+import { toast } from "sonner";
+
 import { deleteDoctorAction } from "@/actions/delete-doctor";
 import { UpsertDoctorDialog } from "@/components/(dialog)/upsert-doctor";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -14,9 +18,7 @@ import { Separator } from "@/components/ui/separator";
 import { doctorsTable } from "@/db/schema";
 import { formatCurrencyInCents } from "@/helpers/number";
 import { formatDays, formatTimes, getInitialsName } from "@/helpers/string";
-import { CalendarIcon, ClockIcon, DollarSignIcon, Trash } from "lucide-react";
-import { useAction } from "next-safe-action/hooks";
-import { toast } from "sonner";
+
 import { BaseAlertDialog } from "../(dialog)/base-alert-dialog";
 import { BaseButton } from "../base-button";
 

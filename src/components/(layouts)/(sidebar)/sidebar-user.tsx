@@ -1,5 +1,7 @@
 "use client";
 
+import { EllipsisVertical } from "lucide-react";
+
 import { BaseButton } from "@/components/(bases)/base-button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -13,7 +15,6 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { EllipsisVertical } from "lucide-react";
 
 interface SidebarUserProps {
   name?: string | null;

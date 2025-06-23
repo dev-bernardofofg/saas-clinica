@@ -1,3 +1,5 @@
+import { eq } from "drizzle-orm";
+
 import { AppointmentsTable } from "@/components/(bases)/(tables)/appointments-table";
 import { BaseButton } from "@/components/(bases)/base-button";
 import { PlanRestrictionWrapper } from "@/components/(bases)/plan-restriction-wrapper";
@@ -8,7 +10,6 @@ import { Fade } from "@/components/(motions)/fade";
 import { db } from "@/db";
 import { appointmentsTable, doctorsTable, patientsTable } from "@/db/schema";
 import { getCurrentClinicId, getCurrentUser } from "@/lib/session";
-import { eq } from "drizzle-orm";
 
 export default async function AppointmentsPage() {
   const user = await getCurrentUser();

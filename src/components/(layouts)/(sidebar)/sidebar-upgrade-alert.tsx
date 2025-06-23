@@ -1,8 +1,9 @@
 "use client";
 
+import { Crown, Zap } from "lucide-react";
+
 import { Card, CardContent } from "@/components/ui/card";
 import { usePlanLimitations } from "@/hooks/use-plan-limitations";
-import { Crown, Zap } from "lucide-react";
 
 interface SidebarUpgradeAlertProps {
   plan: "free" | "initial";

@@ -1,3 +1,8 @@
+import { eq } from "drizzle-orm";
+import { headers } from "next/headers";
+import { redirect } from "next/navigation";
+import React from "react";
+
 import { BaseBreadcrumb } from "@/components/(bases)/base-breadcrumb";
 import { SidebarWithAlert } from "@/components/(layouts)/(sidebar)/sidebar-with-alert";
 import { Sidebar, SidebarProvider } from "@/components/ui/sidebar";
@@ -5,10 +10,6 @@ import { db } from "@/db";
 import { appointmentsTable, doctorsTable, patientsTable } from "@/db/schema";
 import { auth } from "@/lib/auth";
 import { getCurrentUser } from "@/lib/session";
-import { eq } from "drizzle-orm";
-import { headers } from "next/headers";
-import { redirect } from "next/navigation";
-import React from "react";
 
 const LayoutPrivate = async ({ children }: { children: React.ReactNode }) => {
   const headersList = await headers();
@@ -54,7 +55,7 @@ const LayoutPrivate = async ({ children }: { children: React.ReactNode }) => {
       };
       userName = user.name || userName;
       clinicName = user.clinic?.name || clinicName;
-      avatarUrl = (user as any).image || avatarUrl;
+      avatarUrl = avatarUrl;
     }
   } catch (error) {
     // Se houver erro, usar valores padrão

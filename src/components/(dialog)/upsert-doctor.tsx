@@ -1,9 +1,10 @@
 "use client";
 
+import { useState } from "react";
+
 import { BaseDialog } from "@/components/(bases)/(dialog)/base-dialog";
 import { UpsertDoctorForm } from "@/components/(forms)/upsert-doctor.form";
 import { doctorsTable } from "@/db/schema";
-import { useState } from "react";
 
 interface UpsertDoctorDialogProps {
   doctor?: typeof doctorsTable.$inferSelect;
