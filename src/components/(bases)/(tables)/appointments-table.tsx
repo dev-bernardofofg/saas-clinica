@@ -51,7 +51,7 @@ export function AppointmentsTable({
           header: "DATA",
           accessorKey: "date",
           cell: (value) =>
-            format(new Date(value), "dd/MM/yy, HH:mm", {
+            format(new Date(value as string), "dd/MM/yy, HH:mm", {
               locale: ptBR,
             }),
         },
@@ -68,7 +68,7 @@ export function AppointmentsTable({
         {
           header: "VALOR",
           accessorKey: "priceInCents",
-          cell: (value) => formatCurrencyInCents(value),
+          cell: (value) => formatCurrencyInCents(value as number),
         },
         {
           header: "STATUS",
