@@ -18,15 +18,11 @@ export const FilterDashboardMetricsForm = () => {
     defaultValues: filterDashboardMetricsDefaultValues,
   });
 
-  const [from, setFrom] = useQueryState(
+  const [, setFrom] = useQueryState(
     "from",
     parseAsIsoDate.withDefault(new Date()),
   );
-
-  const [to, setTo] = useQueryState(
-    "to",
-    parseAsIsoDate.withDefault(new Date()),
-  );
+  const [, setTo] = useQueryState("to", parseAsIsoDate.withDefault(new Date()));
 
   const handleFilterMetrics = useCallback(
     (data: FilterDashboardMetricsSchema) => {
@@ -43,11 +39,6 @@ export const FilterDashboardMetricsForm = () => {
     },
     [setFrom, setTo],
   );
-
-  const date = {
-    from,
-    to,
-  };
 
   useEffect(() => {
     const subscription = form.watch((_, { name }) => {
