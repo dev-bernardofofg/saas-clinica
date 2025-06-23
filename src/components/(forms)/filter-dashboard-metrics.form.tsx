@@ -69,7 +69,6 @@ export const FilterDashboardMetricsForm = () => {
           label="Período"
           placeholder="Selecione o período"
           isDisable={false}
-          defaultValue={date}
         />
       </BaseForm>
     </Form>

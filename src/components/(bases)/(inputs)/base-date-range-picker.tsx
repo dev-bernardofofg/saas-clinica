@@ -4,7 +4,7 @@ import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { motion } from "framer-motion";
 import { CalendarIcon, ChevronLeft, ChevronRight } from "lucide-react";
-import React, { useState } from "react";
+import { useState } from "react";
 import { DateRange } from "react-day-picker";
 import { Control, FieldValues, Path, useFormContext } from "react-hook-form";
 
@@ -46,10 +46,6 @@ type BaseDateRangePickerProps<T extends FieldValues> = {
   toYear?: number;
   isDateAvaliable?: (date: Date) => boolean;
   isDisable?: boolean;
-  defaultValue?: {
-    from: Date;
-    to: Date;
-  };
 };
 
 export function BaseDateRangePicker<T extends FieldValues>({
@@ -67,25 +63,9 @@ export function BaseDateRangePicker<T extends FieldValues>({
   toYear = new Date().getFullYear(),
   isDateAvaliable,
   isDisable = false,
-  defaultValue,
 }: BaseDateRangePickerProps<T>) {
   const methods = useFormContext<T>();
   const [calendarDate, setCalendarDate] = useState<Date | undefined>(undefined);
-
-  React.useEffect(() => {
-    if (defaultValue) {
-      const fromDate = new Date(defaultValue.from);
-      const toDate = new Date(defaultValue.to);
-      fromDate.setUTCHours(3, 0, 0, 0);
-      toDate.setUTCHours(3, 0, 0, 0);
-
-      methods.setValue(
-        fromFieldName,
-        format(fromDate, "yyyy-MM-dd") as T[Path<T>],
-      );
-      methods.setValue(toFieldName, format(toDate, "yyyy-MM-dd") as T[Path<T>]);
-    }
-  }, [defaultValue, fromFieldName, toFieldName, methods]);
 
   const years = Array.from(
     { length: toYear - fromYear + 1 },
