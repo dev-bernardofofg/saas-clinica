@@ -1,36 +1,144 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# SaaS Clínica
 
-## Getting Started
+[![Versão](https://img.shields.io/badge/version-0.1.0-blue)]()  
+[![Deploy no Vercel](https://img.shields.io/badge/vercel-deploy-black?logo=vercel)](https://bernardofofg-clinica-saas.vercel.app/)
 
-First, run the development server:
+Plataforma SaaS para gestão completa de clínicas médicas: cadastro de pacientes, agendamento de consultas, controle financeiro e muito mais.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+---
+
+## 📍 Demo
+
+Acesse a aplicação rodando em produção:  
+🔗 https://bernardofofg-clinica-saas.vercel.app/
+
+---
+
+## 🛠 Tecnologias
+
+- **Framework**: Next.js 15 (App Router)  
+- **Linguagem**: TypeScript  
+- **Estilização**: Tailwind CSS  
+- **Componentes**: Radix UI, Lucide Icons  
+- **Formulários**: React Hook Form + Zod + @hookform/resolvers  
+- **State & Data Fetching**: @tanstack/react-query  
+- **Banco de Dados**: PostgreSQL via Drizzle ORM & drizzle-kit  
+- **Autenticação**: better-auth + next-safe-action  
+- **Pagamentos**: Stripe (`@stripe/stripe-js`, `stripe`)  
+- **Gráficos**: Recharts  
+- **Mascaramento de inputs**: react-input-mask / @react-input/mask  
+- **Notificações**: Sonner  
+- **Animações**: Framer Motion  
+- **Date handling**: date-fns, dayjs  
+
+---
+
+## ✨ Funcionalidades
+
+- ✅ **Cadastro e login** de usuários (clínicas / administradores)  
+- ✅ **Gerenciamento de pacientes** (CRUD)  
+- ✅ **Agendamento de consultas** com calendário e máscaras de data/hora  
+- ✅ **Dashboard financeiro** com gráficos de faturamento e relatórios mensais  
+- ✅ **Integração com Stripe** para cobrança e histórico de pagamentos  
+- ✅ **Notificações em tempo real** para alerts e confirmações  
+- ✅ **Suporte a tema claro/escuro** (next-themes)  
+
+---
+
+## 🚀 Instalação e execução
+
+1. **Clone o repositório**  
+   ```bash
+   git clone https://github.com/dev-bernardofofg/saas-clinica.git
+   cd saas-clinica
+   ```
+
+2. **Instale as dependências**  
+   ```bash
+   pnpm install
+   # ou npm install
+   # ou yarn
+   ```
+
+3. **Crie um arquivo de variáveis de ambiente**  
+   Copie o `.env.example` (ou crie um `.env.local`) com as chaves abaixo:
+
+   ```
+   # conexão com PostgreSQL
+   DATABASE_URL=postgresql://usuario:senha@host:porta/nome_do_banco
+
+   # Stripe
+   NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_...
+   STRIPE_SECRET_KEY=sk_test_...
+
+   # better-auth (opcional)
+   AUTH_SECRET=algum-segredo-aleatorio
+
+   # URL base da sua aplicação
+   NEXT_PUBLIC_APP_URL=http://localhost:3000
+   ```
+
+4. **Prepare o banco de dados**  
+   ```bash
+   npx drizzle-kit generate
+   npx drizzle-kit push
+   ```
+
+5. **Inicie em modo de desenvolvimento**  
+   ```bash
+   pnpm dev
+   # abre em http://localhost:3000
+   ```
+
+6. **Build e start para produção**  
+   ```bash
+   pnpm build
+   pnpm start
+   ```
+
+---
+
+## 📂 Estrutura de pastas
+
+```
+.
+├── public/                # Assets estáticos (ícones, imagens)
+├── src/
+│   ├── app/               # Páginas e layouts (Next.js App Router)
+│   ├── components/        # Componentes reutilizáveis
+│   ├── db/                # Schema (Drizzle ORM)
+│   ├── lib/               # Utilitários e helpers
+│   └── styles/            # Arquivos CSS (Tailwind)
+├── drizzle.config.ts      # Configuração do drizzle-kit
+├── next.config.ts         # Configuração Next.js
+├── package.json
+└── README.md
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🤝 Contribuição
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1. Faça um _fork_ deste repositório  
+2. Crie uma _branch_ para sua feature (`git checkout -b feature/nova-funcionalidade`)  
+3. Faça _commit_ das suas alterações (`git commit -m 'feat: descrição da feature'`)  
+4. Faça _push_ para a sua branch (`git push origin feature/nova-funcionalidade`)  
+5. Abra um _Pull Request_
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+## 📄 Licença
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Este projeto está licenciado sob a **MIT License**. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
+## 📬 Contato
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Bernardo Filipe Oliveira de Farias Guilherme  
+- GitHub: [@dev-bernardofofg](https://github.com/dev-bernardofofg)  
+- LinkedIn: https://www.linkedin.com/in/bernardofofg/  
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+
+> Construído com ♥ e Next.js 🚀  
